@@ -139,6 +139,54 @@ function stopTimer() {
   }
 }
 
+// ===== 五言絶句バリデーション（漢字のみ・4行×各5字） =====
+function normalizePoemText(raw) {
+  // 入力中も使えるように、改行と漢字以外を取り除く（半角/全角空白や句読点など）
+  return raw.replace(/[^\u4E00-\u9FFF\n]/g, "");
+}
+
+function validateGogonZekku(poem) {
+  const lines = poem
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
+
+  if (lines.length !== 4) {
+    return { ok: false, message: "五言絶句は「4行」で構成してください。（現在 " + lines.length + " 行）" };
+  }
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    // 1行あたりの文字数チェック（全て漢字のみになっている前提）
+    if (line.length !== 5) {
+      return {
+        ok: false,
+        message: `第 ${i + 1} 行は漢字5字にしてください。（現在 ${line.length} 字）`
+      };
+    }
+    // 念のため、1文字ずつ漢字かどうかも検証
+    if (!/^[\u4E00-\u9FFF]+$/.test(line)) {
+      return {
+        ok: false,
+        message: `第 ${i + 1} 行に漢字以外の文字が含まれています。`
+      };
+    }
+  }
+
+  return { ok: true, message: "" };
+}
+
+// 入力中は漢字と改行以外を自動で除去
+poemInput.addEventListener("input", () => {
+  const caret = poemInput.selectionStart;
+  const normalized = normalizePoemText(poemInput.value);
+  if (normalized !== poemInput.value) {
+    poemInput.value = normalized;
+    // ざっくり元の位置付近に戻す
+    poemInput.selectionStart = poemInput.selectionEnd = Math.max(0, caret - 1);
+  }
+});
+
 // ===== Firestore: マッチング処理 =====
 async function findOrCreateMatch(userName) {
   const matchesRef = collection(db, "matches");
@@ -270,9 +318,15 @@ battleButton.addEventListener("click", async () => {
 poemSendButton.addEventListener("click", async () => {
   if (!currentMatchId || currentIsPlayer1 === null) return;
 
-  const text = poemInput.value.trim();
+  const text = normalizePoemText(poemInput.value).trim();
   if (!text) {
     alert("五言絶句を入力してください");
+    return;
+  }
+
+  const { ok, message } = validateGogonZekku(text);
+  if (!ok) {
+    alert(message);
     return;
   }
 
