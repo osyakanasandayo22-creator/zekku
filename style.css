@@ -1,0 +1,383 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background: radial-gradient(circle at top, #f5f3ff, #eef2ff 40%, #f9fafb 80%);
+  color: #111827;
+}
+
+.app {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 22px 45px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(148, 163, 184, 0.2);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 960px;
+  margin: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-header {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #312e81, #4c1d95, #6d28d9);
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid rgba(191, 219, 254, 0.2);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 30%, #e5e7eb, #1f2937);
+  box-shadow: 0 0 0 1px rgba(209, 213, 219, 0.3);
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.logo-text h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+}
+
+.logo-text p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+  gap: 20px;
+  padding: 20px 24px 18px;
+}
+
+.panel {
+  background: linear-gradient(145deg, #f9fafb, #ffffff);
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-main {
+  position: relative;
+}
+
+.panel-secondary,
+.panel-tertiary {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.panel-header h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.panel-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.panel-header.compact h2 {
+  font-size: 16px;
+}
+
+.panel-header.compact p {
+  font-size: 12px;
+}
+
+.name-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.name-form label {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.name-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.name-input-row input {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+  background: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.name-input-row input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.35);
+  background: #ffffff;
+}
+
+.main-action {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.primary-button,
+.secondary-button {
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #eef2ff;
+  box-shadow: 0 12px 24px rgba(55, 48, 163, 0.35);
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(55, 48, 163, 0.42);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(55, 48, 163, 0.35);
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.secondary-button:hover {
+  background: #f3f4f6;
+}
+
+.primary-button.full {
+  width: 100%;
+}
+
+.helper-text {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.how-it-works {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.how-it-works h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.how-it-works ol {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.how-it-works li + li {
+  margin-top: 2px;
+}
+
+.battle-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.timer {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+#timer-display {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 18px;
+  margin-left: 4px;
+  color: #dc2626;
+}
+
+.versus {
+  font-size: 13px;
+  background: #eef2ff;
+  color: #1f2937;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #c7d2fe;
+}
+
+.battle-status-text {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.poem-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.poem-input-area label {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.poem-input-area textarea {
+  resize: vertical;
+  min-height: 120px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-family: inherit;
+  font-size: 14px;
+  background: #f9fafb;
+  outline: none;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.poem-input-area textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.35);
+  background: #ffffff;
+}
+
+.poem-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.poem-card {
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.poem-card.me {
+  background: linear-gradient(145deg, #eef2ff, #eff6ff);
+}
+
+.poem-card.other {
+  background: linear-gradient(145deg, #fefce8, #fef9c3);
+}
+
+.poem-card h3 {
+  margin: 0;
+  font-size: 13px;
+  color: #374151;
+}
+
+.poem-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+}
+
+.result-actions {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app-footer {
+  padding: 10px 18px;
+  font-size: 11px;
+  color: #6b7280;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.app-footer .dot {
+  opacity: 0.7;
+}
+
+@media (max-width: 800px) {
+  .app {
+    margin: 16px 8px;
+  }
+
+  .app-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panel-secondary,
+  .panel-tertiary {
+    opacity: 0.35;
+  }
+
+  .poem-compare {
+    grid-template-columns: 1fr;
+  }
+}
+

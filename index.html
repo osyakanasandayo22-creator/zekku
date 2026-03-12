@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>五言絶句バトル</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div class="logo-area">
+          <div class="logo-mark">五</div>
+          <div class="logo-text">
+            <h1>五言絶句バトル</h1>
+            <p>オンラインで一騎打ちの詩バトル</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <!-- ホーム：名前入力＋誰かとバトる -->
+        <section class="panel panel-main" id="home-view">
+          <div class="panel-header">
+            <h2>ようこそ、詩人の間へ</h2>
+            <p>
+              ネットのどこかの誰かとマッチングして、
+              <br />
+              5分で五言絶句を詠み上げよう。
+            </p>
+          </div>
+
+          <form class="name-form">
+            <label for="user-name-input">あなたの名前</label>
+            <div class="name-input-row">
+              <input
+                id="user-name-input"
+                type="text"
+                placeholder="例：李白、芭蕉 など"
+                autocomplete="off"
+              />
+            </div>
+          </form>
+
+          <div class="main-action">
+            <button id="battle-button" class="primary-button">
+              誰かとバトる
+            </button>
+            <p class="helper-text">
+              ボタンを押すと、オンラインの誰かと1対1でマッチングします。
+            </p>
+          </div>
+
+          <div class="how-it-works">
+            <h3>バトルの流れ</h3>
+            <ol>
+              <li>相手とマッチング（1対1）</li>
+              <li>5分以内に五言絶句を作って送信</li>
+              <li>お互いの作品を並べて鑑賞</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- バトル進行エリア（JSで表示を切り替える用の枠だけ先に用意） -->
+        <section class="panel panel-secondary" id="battle-view">
+          <div class="panel-header compact">
+            <h2>対戦中</h2>
+            <p class="battle-status-text">対戦相手を探しています…</p>
+          </div>
+
+          <div class="battle-meta">
+            <div class="timer">
+              制限時間
+              <span id="timer-display">05:00</span>
+            </div>
+            <div class="versus" id="versus-display">
+              あなた vs ？？？
+            </div>
+          </div>
+
+          <div class="poem-input-area">
+            <label for="poem-input">あなたの五言絶句</label>
+            <textarea
+              id="poem-input"
+              rows="5"
+              placeholder="例：\n春風や\n　　川に映せし\n　　　　花の影"
+            ></textarea>
+            <button id="poem-send-button" class="primary-button full">
+              作品を送信する
+            </button>
+            <p class="helper-text" id="battle-helper-text">
+              5分以内に送信してください。送信後は内容を編集できません。
+            </p>
+          </div>
+        </section>
+
+        <!-- 鑑賞画面 -->
+        <section class="panel panel-tertiary" id="result-view">
+          <div class="panel-header compact">
+            <h2>鑑賞タイム</h2>
+            <p>二人の五言絶句を味わおう。</p>
+          </div>
+
+          <div class="poem-compare">
+            <article class="poem-card me">
+              <h3>あなたの作品</h3>
+              <pre id="my-poem-display" class="poem-text">（まだ送信されていません）</pre>
+            </article>
+
+            <article class="poem-card other">
+              <h3>相手の作品</h3>
+              <pre id="opponent-poem-display" class="poem-text">（相手の送信を待っています）</pre>
+            </article>
+          </div>
+
+          <div class="result-actions">
+            <button id="back-to-home-button" class="secondary-button">
+              ホームに戻る
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>五言絶句バトル</span>
+        <span class="dot">·</span>
+        <span>オンライン対詩プラットフォーム</span>
+      </footer>
+    </div>
+
+    <!-- 後でここにバトルロジック用のscript.jsをつなぎこみます -->
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
