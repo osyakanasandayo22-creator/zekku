@@ -100,6 +100,13 @@ body {
   pointer-events: none;
 }
 
+.panel-secondary.active,
+.panel-tertiary.active {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
+
 .panel-header h2 {
   margin: 0 0 4px;
   font-size: 18px;
