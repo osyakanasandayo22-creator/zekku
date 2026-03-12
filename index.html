@@ -19,45 +19,83 @@
       </header>
 
       <main class="app-main">
-        <!-- ホーム：名前入力＋誰かとバトる -->
-        <section class="panel panel-main" id="home-view">
-          <div class="panel-header">
-            <h2>ようこそ、詩人の間へ</h2>
-            <p>
-              ネットのどこかの誰かとマッチングして、
-              <br />
-              5分で五言絶句を詠み上げよう。
-            </p>
-          </div>
-
-          <form class="name-form">
-            <label for="user-name-input">あなたの名前</label>
-            <div class="name-input-row">
-              <input
-                id="user-name-input"
-                type="text"
-                placeholder="例：李白、芭蕉 など"
-                autocomplete="off"
-              />
+        <!-- ホーム：モード選択＋名前入力＋誰かとバトる -->
+        <section class="home" id="home-view">
+          <div class="home-header">
+            <div class="home-title-block">
+              <h2>詩のマーケットへ</h2>
+              <p>スタイルを選んで、オンラインのどこかの詩人と一騎打ち。</p>
             </div>
-          </form>
-
-          <div class="main-action">
-            <button id="battle-button" class="primary-button">
-              誰かとバトる
-            </button>
-            <p class="helper-text">
-              ボタンを押すと、オンラインの誰かと1対1でマッチングします。
-            </p>
           </div>
 
-          <div class="how-it-works">
-            <h3>バトルの流れ</h3>
-            <ol>
-              <li>相手とマッチング（1対1）</li>
-              <li>5分以内に五言絶句を作って送信</li>
-              <li>お互いの作品を並べて鑑賞</li>
-            </ol>
+          <div class="mode-switch">
+            <button class="mode-chip active" data-mode="gogon-zekku">
+              <span class="mode-label">五言絶句</span>
+              <span class="mode-tag">利用中</span>
+            </button>
+            <button class="mode-chip disabled" data-mode="gogon-risshi" disabled>
+              <span class="mode-label">五言律詩</span>
+              <span class="mode-tag">準備中</span>
+            </button>
+            <button class="mode-chip disabled" data-mode="shichigon-zekku" disabled>
+              <span class="mode-label">七言絶句</span>
+              <span class="mode-tag">準備中</span>
+            </button>
+            <button class="mode-chip disabled" data-mode="shichigon-risshi" disabled>
+              <span class="mode-label">七言律詩</span>
+              <span class="mode-tag">準備中</span>
+            </button>
+          </div>
+
+          <div class="home-main-row">
+            <div class="home-left">
+              <form class="name-form">
+                <label for="user-name-input">ハンドルネーム</label>
+                <div class="name-input-row">
+                  <input
+                    id="user-name-input"
+                    type="text"
+                    placeholder="例：李白、芭蕉 など"
+                    autocomplete="off"
+                  />
+                </div>
+              </form>
+
+              <div class="main-action">
+                <button id="battle-button" class="primary-button">
+                  マッチングを開始
+                </button>
+                <p class="helper-text">
+                  五言絶句モードで、1対1のバトルを開始します。
+                </p>
+              </div>
+            </div>
+
+            <div class="home-right">
+              <div class="meta-card">
+                <div class="meta-row">
+                  <span class="meta-label">現在のモード</span>
+                  <span class="meta-value">五言絶句（4句・各5字）</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-label">制限時間</span>
+                  <span class="meta-value">5分</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-label">マッチング方式</span>
+                  <span class="meta-value">ランダム 1 vs 1</span>
+                </div>
+              </div>
+
+              <div class="how-it-works">
+                <h3>バトルの流れ</h3>
+                <ol>
+                  <li>マッチングを開始して相手と接続</li>
+                  <li>5分以内に五言絶句を作って送信</li>
+                  <li>お互いの作品を並べて鑑賞</li>
+                </ol>
+              </div>
+            </div>
           </div>
         </section>
 
