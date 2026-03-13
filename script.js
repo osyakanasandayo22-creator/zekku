@@ -230,22 +230,43 @@ function validateGogonZekku(poem) {
 async function findOrCreateMatch(userName) {
   const matchesRef = collection(db, "matches");
 
-  // 1. 待機中の相手を探す
+  // 1. 「今」待機している相手を探す（古い待機は無視して新規バトル扱い）
   const waitingQuery = query(matchesRef, where("status", "==", "waiting"));
   const waitingSnap = await getDocs(waitingQuery);
 
   if (!waitingSnap.empty) {
-    // 既に待っている人がいる → そのバトルに参加
-    const matchDoc = waitingSnap.docs[0];
-    const matchRef = doc(db, "matches", matchDoc.id);
+    const nowMs = Date.now();
+    const MAX_WAIT_MS = 60 * 1000; // 60秒より古い待機は無効とみなす
 
-    await updateDoc(matchRef, {
-      status: "ongoing",
-      player2Name: userName,
-      matchedAt: serverTimestamp()
-    });
+    for (const d of waitingSnap.docs) {
+      const data = d.data();
+      const createdAt = data.createdAt;
 
-    return { matchId: matchDoc.id, isPlayer1: false };
+      // createdAt が無い／変な場合はスキップ
+      if (!createdAt || typeof createdAt.toMillis !== "function") {
+        continue;
+      }
+
+      const createdMs = createdAt.toMillis();
+      if (nowMs - createdMs > MAX_WAIT_MS) {
+        // 古い待機は finished にしてスキップ（ゴースト対戦の原因になるため）
+        const staleRef = doc(db, "matches", d.id);
+        updateDoc(staleRef, { status: "finished", finishedAt: serverTimestamp() }).catch(
+          () => {}
+        );
+        continue;
+      }
+
+      // 有効な待機相手が見つかった → そのバトルに参加
+      const matchRef = doc(db, "matches", d.id);
+      await updateDoc(matchRef, {
+        status: "ongoing",
+        player2Name: userName,
+        matchedAt: serverTimestamp()
+      });
+
+      return { matchId: d.id, isPlayer1: false };
+    }
   }
 
   // 2. 誰もいない → 自分が先に待つ
