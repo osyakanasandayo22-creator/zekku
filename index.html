@@ -21,7 +21,7 @@
       <main class="app-main">
         <!-- ホーム：説明テキスト＋モード選択タグ＋バトるボタン -->
         <section class="home" id="home-view">
-          <div class="home-row">
+          <div class="home-center">
             <div class="home-copy">
               <p class="copy-line">絶句でネット対戦。</p>
               <p class="copy-line">絶句で賭ける。</p>
@@ -29,22 +29,68 @@
             </div>
 
             <div class="home-modes">
-              <button class="mode-chip primary-mode" data-mode="gogon-zekku">
-                <span class="mode-label">五言絶句</span>
-                <span class="mode-tag">デフォルト</span>
-              </button>
-              <button class="mode-chip disabled" data-mode="gogon-risshi" disabled>
-                <span class="mode-label">五言律詩</span>
-                <span class="mode-tag">準備中</span>
-              </button>
-              <button class="mode-chip disabled" data-mode="shichigon-zekku" disabled>
-                <span class="mode-label">七言絶句</span>
-                <span class="mode-tag">準備中</span>
-              </button>
-              <button class="mode-chip disabled" data-mode="shichigon-risshi" disabled>
-                <span class="mode-label">七言律詩</span>
-                <span class="mode-tag">準備中</span>
-              </button>
+              <div class="mode-select" id="mode-select">
+                <button
+                  type="button"
+                  class="mode-select-trigger"
+                  id="mode-select-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                >
+                  <span class="mode-selected-label" id="mode-selected-label">五言絶句</span>
+                  <span class="mode-selected-tag" id="mode-selected-tag">デフォルト</span>
+                  <span class="mode-select-arrow">▼</span>
+                </button>
+                <div class="mode-select-menu" id="mode-select-menu" role="listbox">
+                  <button
+                    class="mode-option"
+                    data-mode="gogon-zekku"
+                    data-label="五言絶句"
+                    data-tag="デフォルト"
+                    role="option"
+                    aria-selected="true"
+                  >
+                    <span class="mode-label">五言絶句</span>
+                    <span class="mode-tag">デフォルト</span>
+                  </button>
+                  <button
+                    class="mode-option disabled"
+                    data-mode="gogon-risshi"
+                    data-label="五言律詩"
+                    data-tag="準備中"
+                    role="option"
+                    aria-disabled="true"
+                    disabled
+                  >
+                    <span class="mode-label">五言律詩</span>
+                    <span class="mode-tag">準備中</span>
+                  </button>
+                  <button
+                    class="mode-option disabled"
+                    data-mode="shichigon-zekku"
+                    data-label="七言絶句"
+                    data-tag="準備中"
+                    role="option"
+                    aria-disabled="true"
+                    disabled
+                  >
+                    <span class="mode-label">七言絶句</span>
+                    <span class="mode-tag">準備中</span>
+                  </button>
+                  <button
+                    class="mode-option disabled"
+                    data-mode="shichigon-risshi"
+                    data-label="七言律詩"
+                    data-tag="準備中"
+                    role="option"
+                    aria-disabled="true"
+                    disabled
+                  >
+                    <span class="mode-label">七言律詩</span>
+                    <span class="mode-tag">準備中</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div class="home-action">

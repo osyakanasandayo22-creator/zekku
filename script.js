@@ -29,6 +29,10 @@ const db = getFirestore(app);
 
 // ===== DOM 取得 =====
 const battleButton = document.getElementById("battle-button");
+const modeSelectTrigger = document.getElementById("mode-select-trigger");
+const modeSelectMenu = document.getElementById("mode-select-menu");
+const modeSelectedLabel = document.getElementById("mode-selected-label");
+const modeSelectedTag = document.getElementById("mode-selected-tag");
 
 const homeView = document.getElementById("home-view");
 const battleView = document.getElementById("battle-view");
@@ -52,6 +56,7 @@ let currentMatchId = null;
 let currentIsPlayer1 = null;
 let matchUnsubscribe = null;
 let timerIntervalId = null;
+let currentMode = "gogon-zekku";
 
 // ===== ユーザー名の保存／読み込み =====
 function loadUserName() {
@@ -105,6 +110,54 @@ function showResult() {
 
 // 初期はホームを表示
 showHome();
+
+// ===== モード選択 UI =====
+function closeModeMenu() {
+  if (!modeSelectTrigger || !modeSelectMenu) return;
+  modeSelectTrigger.classList.remove("open");
+  modeSelectTrigger.setAttribute("aria-expanded", "false");
+  modeSelectMenu.classList.remove("open");
+}
+
+if (modeSelectTrigger && modeSelectMenu) {
+  modeSelectTrigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = modeSelectMenu.classList.contains("open");
+    if (isOpen) {
+      closeModeMenu();
+    } else {
+      modeSelectTrigger.classList.add("open");
+      modeSelectTrigger.setAttribute("aria-expanded", "true");
+      modeSelectMenu.classList.add("open");
+    }
+  });
+
+  modeSelectMenu.addEventListener("click", (e) => {
+    const option = e.target.closest(".mode-option");
+    if (!option || option.classList.contains("disabled")) return;
+
+    const label = option.getAttribute("data-label") || "";
+    const tag = option.getAttribute("data-tag") || "";
+    const mode = option.getAttribute("data-mode") || "gogon-zekku";
+
+    currentMode = mode;
+    if (modeSelectedLabel) modeSelectedLabel.textContent = label;
+    if (modeSelectedTag) modeSelectedTag.textContent = tag;
+
+    closeModeMenu();
+  });
+
+  window.addEventListener("click", (e) => {
+    if (!modeSelectMenu.classList.contains("open")) return;
+    const inside =
+      e.target === modeSelectTrigger ||
+      modeSelectTrigger.contains(e.target) ||
+      modeSelectMenu.contains(e.target);
+    if (!inside) {
+      closeModeMenu();
+    }
+  });
+}
 
 // ===== タイマー =====
 function startTimer(minutes = 5) {
@@ -316,7 +369,7 @@ battleButton.addEventListener("click", async () => {
     showHome();
   } finally {
     battleButton.disabled = false;
-    battleButton.textContent = "バトルを開始";
+    battleButton.textContent = "バトる";
   }
 });
 
