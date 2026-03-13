@@ -179,13 +179,13 @@ body {
 .home-modes {
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .home-controls {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 16px;
 }
 
@@ -200,12 +200,13 @@ body {
 
 .mode-select {
   position: relative;
+  width: 220px;
   max-width: 100%;
 }
 
 .mode-select-trigger {
   width: 70%;
-  margin: 0;
+  margin: 0 auto;
   border-radius: 9999px;
   border: 2px solid transparent;
   background:
@@ -220,19 +221,12 @@ body {
   cursor: pointer;
   color: #e5e7eb;
   transition:
-    width 0.2s ease-out,
     background-color 0.12s ease,
     border-color 0.12s ease,
     box-shadow 0.12s ease,
     color 0.12s ease;
   position: relative;
   overflow: visible;
-}
-
-/* ホバー時にモード選択ボタン自体を横に広げる。
-   それに合わせて右隣のバトルボタンが押し出されて右へ移動する */
-.mode-select-trigger:hover {
-  width: 100%;
 }
 
 .mode-selected-label {
