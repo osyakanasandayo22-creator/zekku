@@ -458,65 +458,7 @@ body {
 }
 
 .battle-button {
-  position: relative;
-  padding-inline: 32px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  background: rgba(15, 23, 42, 0.96);
-  color: #e5f2ff;
-  box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 1),
-    0 0 18px rgba(56, 189, 248, 0.7);
-  overflow: hidden;
-}
-
-.battle-button::before,
-.battle-button::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.battle-button::before {
-  border-radius: inherit;
-  inset: -1px;
-  border: 2px solid transparent;
-  background:
-    linear-gradient(#020617, #020617) padding-box,
-    linear-gradient(120deg, #38bdf8, #0ea5e9, #38bdf8) border-box;
-  box-shadow:
-    0 0 10px rgba(56, 189, 248, 0.9),
-    0 0 24px rgba(56, 189, 248, 0.9);
-}
-
-.battle-button::after {
-  background: radial-gradient(circle at 50% 50%, rgba(248, 250, 252, 0), transparent 60%);
-  opacity: 0;
-}
-
-.battle-button:hover {
-  background: radial-gradient(circle at 50% 40%, rgba(248, 250, 252, 0.9), rgba(15, 23, 42, 0.9));
-  color: #020617;
-  transform: translateY(-1px);
-}
-
-.battle-button:active {
-  transform: translateY(0);
-}
-
-.battle-button:hover::after {
-  animation: battle-neon-fill 0.8s infinite steps(2, end);
-}
-
-@keyframes battle-neon-fill {
-  0% {
-    opacity: 0.1;
-  }
-  100% {
-    opacity: 1;
-  }
+  /* ここではベースだけ定義しておき、詳細は後ろの .primary-button.battle-button で上書きする */
 }
 
 .primary-button {
@@ -560,66 +502,62 @@ body {
   padding-inline: 32px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  background: rgba(15, 23, 42, 0.96);
-  color: #e5f2ff;
+  background: #020617;
+  color: #e0f2fe;
   text-shadow:
-    0 0 6px rgba(191, 219, 254, 0.9),
-    0 0 14px rgba(125, 211, 252, 0.9);
+    0 0 6px rgba(125, 211, 252, 1),
+    0 0 14px rgba(56, 189, 248, 1);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(#020617, #020617),
+    linear-gradient(120deg, #38bdf8, #0ea5e9, #38bdf8);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 1),
-    0 0 18px rgba(56, 189, 248, 0.9);
+    0 0 12px rgba(56, 189, 248, 0.9),
+    0 0 32px rgba(56, 189, 248, 0.9);
   overflow: hidden;
 }
 
-.primary-button.battle-button::before,
-.primary-button.battle-button::after {
+.primary-button.battle-button::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 18%;
   border-radius: inherit;
+  background: radial-gradient(circle at 50% 40%, rgba(248, 250, 252, 0.5), transparent 70%);
+  opacity: 0;
   pointer-events: none;
 }
 
-.primary-button.battle-button::before {
-  inset: -1px;
-  border-radius: inherit;
-  border: 2px solid transparent;
-  background:
-    linear-gradient(#020617, #020617) padding-box,
-    linear-gradient(120deg, #38bdf8, #0ea5e9, #38bdf8) border-box;
-  box-shadow:
-    0 0 10px rgba(56, 189, 248, 0.95),
-    0 0 26px rgba(56, 189, 248, 0.95);
-}
-
-.primary-button.battle-button::after {
-  background: radial-gradient(circle at 50% 45%, rgba(248, 250, 252, 1), transparent 65%);
-  opacity: 0;
-}
-
 .primary-button.battle-button:hover {
-  background: radial-gradient(circle at 50% 45%, rgba(248, 250, 252, 0.95), rgba(15, 23, 42, 0.9));
-  color: #020617;
+  color: #0b1120;
   text-shadow:
     0 0 10px rgba(248, 250, 252, 1),
-    0 0 24px rgba(191, 219, 254, 1);
+    0 0 26px rgba(191, 219, 254, 1);
   transform: translateY(-1px);
+  box-shadow:
+    0 0 20px rgba(248, 250, 252, 1),
+    0 0 42px rgba(56, 189, 248, 1);
 }
 
 .primary-button.battle-button:active {
   transform: translateY(0);
 }
 
-.primary-button.battle-button:hover::after {
-  animation: battle-neon-fill 0.7s infinite steps(2, end);
+.primary-button.battle-button:hover::before {
+  animation: battle-neon-flash 0.6s infinite steps(2, end);
 }
 
-@keyframes battle-neon-fill {
+@keyframes battle-neon-flash {
   0% {
-    opacity: 0.1;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
   }
   100% {
-    opacity: 1;
+    opacity: 0;
   }
 }
 
