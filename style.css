@@ -154,8 +154,8 @@ body {
 .mode-select-trigger {
   width: 70%;
   margin: 0 auto;
-  border-radius: 999px;
-  border: 3px solid transparent;
+  border-radius: 9999px;
+  border: 2px solid transparent;
   border-image: linear-gradient(135deg, #facc15, #38bdf8) 1;
   background: rgba(15, 23, 42, 0.92);
   padding: 10px 16px;
