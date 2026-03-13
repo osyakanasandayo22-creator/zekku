@@ -554,6 +554,75 @@ body {
   cursor: default;
 }
 
+/* バトルボタン専用の上書きスタイル（primary-buttonより後に書いて優先させる） */
+.primary-button.battle-button {
+  position: relative;
+  padding-inline: 32px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5f2ff;
+  text-shadow:
+    0 0 6px rgba(191, 219, 254, 0.9),
+    0 0 14px rgba(125, 211, 252, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 18px rgba(56, 189, 248, 0.9);
+  overflow: hidden;
+}
+
+.primary-button.battle-button::before,
+.primary-button.battle-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.primary-button.battle-button::before {
+  inset: -1px;
+  border-radius: inherit;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#020617, #020617) padding-box,
+    linear-gradient(120deg, #38bdf8, #0ea5e9, #38bdf8) border-box;
+  box-shadow:
+    0 0 10px rgba(56, 189, 248, 0.95),
+    0 0 26px rgba(56, 189, 248, 0.95);
+}
+
+.primary-button.battle-button::after {
+  background: radial-gradient(circle at 50% 45%, rgba(248, 250, 252, 1), transparent 65%);
+  opacity: 0;
+}
+
+.primary-button.battle-button:hover {
+  background: radial-gradient(circle at 50% 45%, rgba(248, 250, 252, 0.95), rgba(15, 23, 42, 0.9));
+  color: #020617;
+  text-shadow:
+    0 0 10px rgba(248, 250, 252, 1),
+    0 0 24px rgba(191, 219, 254, 1);
+  transform: translateY(-1px);
+}
+
+.primary-button.battle-button:active {
+  transform: translateY(0);
+}
+
+.primary-button.battle-button:hover::after {
+  animation: battle-neon-fill 0.7s infinite steps(2, end);
+}
+
+@keyframes battle-neon-fill {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .secondary-button {
   background: transparent;
   color: #e5e7eb;
