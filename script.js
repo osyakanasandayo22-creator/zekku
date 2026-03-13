@@ -189,7 +189,7 @@ function stopTimer() {
 
 // ===== 五言絶句バリデーション（漢字のみ・4行×各5字） =====
 function normalizePoemText(raw) {
-  // 入力中も使えるように、改行と漢字以外を取り除く（半角/全角空白や句読点など）
+  // 送信時にだけ、漢字と改行以外を取り除く（半角/全角空白や句読点など）
   return raw.replace(/[^\u4E00-\u9FFF\n]/g, "");
 }
 
@@ -223,17 +223,6 @@ function validateGogonZekku(poem) {
 
   return { ok: true, message: "" };
 }
-
-// 入力中は漢字と改行以外を自動で除去
-poemInput.addEventListener("input", () => {
-  const caret = poemInput.selectionStart;
-  const normalized = normalizePoemText(poemInput.value);
-  if (normalized !== poemInput.value) {
-    poemInput.value = normalized;
-    // ざっくり元の位置付近に戻す
-    poemInput.selectionStart = poemInput.selectionEnd = Math.max(0, caret - 1);
-  }
-});
 
 // ===== Firestore: マッチング処理 =====
 async function findOrCreateMatch(userName) {
