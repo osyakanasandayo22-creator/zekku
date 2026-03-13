@@ -28,7 +28,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ===== DOM 取得 =====
-const nameInput = document.getElementById("user-name-input");
 const battleButton = document.getElementById("battle-button");
 
 const homeView = document.getElementById("home-view");
@@ -57,7 +56,6 @@ let timerIntervalId = null;
 // ===== ユーザー名の保存／読み込み =====
 function loadUserName() {
   const saved = localStorage.getItem("battleUserName") || "";
-  nameInput.value = saved;
   currentUserName = saved;
 }
 
@@ -281,11 +279,18 @@ function cleanupMatchListener() {
 
 // ===== イベント =====
 battleButton.addEventListener("click", async () => {
-  const name = nameInput.value.trim();
+  let name = (currentUserName || "").trim();
   if (!name) {
-    alert("まず名前を入力してください");
-    nameInput.focus();
-    return;
+    const input = prompt("ハンドルネームを入力してください（例：李白、芭蕉 など）", "");
+    if (!input) {
+      alert("ハンドルネームが必要です。");
+      return;
+    }
+    name = input.trim();
+    if (!name) {
+      alert("ハンドルネームが必要です。");
+      return;
+    }
   }
 
   currentUserName = name;
@@ -311,7 +316,7 @@ battleButton.addEventListener("click", async () => {
     showHome();
   } finally {
     battleButton.disabled = false;
-    battleButton.textContent = "誰かとバトる";
+    battleButton.textContent = "バトルを開始";
   }
 });
 
