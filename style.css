@@ -496,7 +496,7 @@ body {
   cursor: default;
 }
 
-/* バトルボタン専用の上書きスタイル（primary-buttonより後に書いて優先させる） */
+/* バトルボタン専用の上書きスタイル（シンプルなネオン看板風） */
 .primary-button.battle-button {
   position: relative;
   padding-inline: 32px;
@@ -505,8 +505,8 @@ body {
   background: #020617;
   color: #e0f2fe;
   text-shadow:
-    0 0 6px rgba(125, 211, 252, 1),
-    0 0 14px rgba(56, 189, 248, 1);
+    0 0 4px rgba(125, 211, 252, 1),
+    0 0 10px rgba(56, 189, 248, 0.9);
   border-radius: 999px;
   border: 2px solid transparent;
   background-image:
@@ -515,45 +515,34 @@ body {
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow:
-    0 0 12px rgba(56, 189, 248, 0.9),
-    0 0 32px rgba(56, 189, 248, 0.9);
+    0 0 10px rgba(56, 189, 248, 0.9),
+    0 0 24px rgba(56, 189, 248, 0.9);
   overflow: hidden;
   transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.primary-button.battle-button::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: #ffffff;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease-out;
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    text-shadow 0.2s ease,
+    transform 0.1s ease;
 }
 
 .primary-button.battle-button:hover {
-  background-image: none;
-  background-color: #ffffff;
-  color: #020617;
+  background-color: #020617;
+  color: #f9fafb;
   text-shadow:
-    0 0 10px rgba(248, 250, 252, 1),
-    0 0 26px rgba(191, 219, 254, 1);
-  transform: translateY(-1px);
+    0 0 6px rgba(248, 250, 252, 1),
+    0 0 18px rgba(125, 211, 252, 1);
   box-shadow:
-    0 0 20px rgba(248, 250, 252, 1),
-    0 0 42px rgba(56, 189, 248, 1);
+    0 0 16px rgba(56, 189, 248, 1),
+    0 0 30px rgba(56, 189, 248, 1);
+  transform: translateY(-1px);
 }
 
 .primary-button.battle-button:active {
   transform: translateY(0);
-}
-
-.primary-button.battle-button:hover::before {
-  opacity: 1;
+  box-shadow:
+    0 0 10px rgba(56, 189, 248, 0.9),
+    0 0 22px rgba(56, 189, 248, 0.9);
 }
 
 .secondary-button {
