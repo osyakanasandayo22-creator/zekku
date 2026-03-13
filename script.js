@@ -44,6 +44,7 @@ const versusDisplay = document.getElementById("versus-display");
 const poemInput = document.getElementById("poem-input");
 const poemSendButton = document.getElementById("poem-send-button");
 const battleHelperText = document.getElementById("battle-helper-text");
+const readyButton = document.getElementById("ready-button");
 
 const myPoemDisplay = document.getElementById("my-poem-display");
 const opponentPoemDisplay = document.getElementById("opponent-poem-display");
@@ -57,6 +58,8 @@ let matchUnsubscribe = null;
 let timerIntervalId = null;
 let currentMode = "gogon-zekku";
 let battleReady = false;
+let hasSentReady = false;
+let isComposingPoem = false;
 
 // ===== ユーザー名の保存／読み込み =====
 function loadUserName() {
@@ -69,6 +72,44 @@ function saveUserName(name) {
 }
 
 loadUserName();
+
+// ===== 入力中の自動整形（漢字のみ・4行×各5字に揃える） =====
+function formatPoemInput() {
+  if (!poemInput) return;
+  // 漢字以外を削除し、最大20文字（4行×5字）までに制限
+  const raw = poemInput.value;
+  const kanjiOnly = raw.replace(/[^\u4E00-\u9FFF]/g, "");
+  const maxChars = 20;
+  const limited = kanjiOnly.slice(0, maxChars);
+
+  let formatted = "";
+  for (let i = 0; i < limited.length; i += 1) {
+    formatted += limited[i];
+    // 5文字ごとに改行を挿入（ただし末尾には不要）
+    if ((i + 1) % 5 === 0 && i !== limited.length - 1) {
+      formatted += "\n";
+    }
+  }
+
+  if (poemInput.value !== formatted) {
+    poemInput.value = formatted;
+    poemInput.selectionStart = poemInput.selectionEnd = formatted.length;
+  }
+}
+
+if (poemInput) {
+  poemInput.addEventListener("compositionstart", () => {
+    isComposingPoem = true;
+  });
+  poemInput.addEventListener("compositionend", () => {
+    isComposingPoem = false;
+    formatPoemInput();
+  });
+  poemInput.addEventListener("input", () => {
+    if (isComposingPoem) return;
+    formatPoemInput();
+  });
+}
 
 // ===== 画面切り替えヘルパー =====
 function showHome() {
@@ -84,6 +125,11 @@ function showHome() {
   currentMatchId = null;
   currentIsPlayer1 = null;
   battleReady = false;
+  hasSentReady = false;
+  if (readyButton) {
+    readyButton.disabled = true;
+    readyButton.textContent = "準備OK";
+  }
   poemInput.value = "";
   poemInput.disabled = false;
   poemSendButton.disabled = false;
@@ -276,6 +322,9 @@ async function findOrCreateMatch(userName) {
     player2Name: null,
     player1Poem: null,
     player2Poem: null,
+    player1Ready: false,
+    player2Ready: false,
+    battleStarted: false,
     createdAt: serverTimestamp()
   });
 
@@ -301,7 +350,13 @@ function listenMatch(matchId, isPlayer1) {
     const opponentLabel = otherName || "？？？";
     versusDisplay.textContent = `${meName || "あなた"} vs ${opponentLabel}`;
 
-    // ステータス文
+    // 準備状態
+    const p1Ready = !!data.player1Ready;
+    const p2Ready = !!data.player2Ready;
+    const bothReady = p1Ready && p2Ready;
+    const alreadyStarted = !!data.battleStarted;
+
+    // ステータス文とUI制御
     if (data.status === "waiting") {
       battleStatusText.textContent = "対戦相手を探しています…";
       battleReady = false;
@@ -310,15 +365,43 @@ function listenMatch(matchId, isPlayer1) {
       poemInput.disabled = true;
       poemSendButton.disabled = true;
       battleHelperText.textContent = "対戦相手を探しています…";
+      if (readyButton) {
+        readyButton.disabled = true;
+        readyButton.textContent = "準備OK";
+      }
     } else if (data.status === "ongoing") {
-      battleStatusText.textContent = "対戦相手が見つかりました。五言絶句を詠みましょう。";
-      if (!battleReady) {
-        battleReady = true;
-        poemInput.disabled = false;
-        poemSendButton.disabled = false;
-        battleHelperText.textContent =
-          "5分以内に送信してください。送信後は内容を編集できません。";
-        startTimer(5);
+      if (!bothReady) {
+        battleStatusText.textContent = "相手が揃いました。準備OKボタンを押してください。";
+        battleReady = false;
+        stopTimer();
+        timerDisplay.textContent = "05:00";
+        poemInput.disabled = true;
+        poemSendButton.disabled = true;
+        battleHelperText.textContent = "両者が準備OKを押すとバトル開始します。";
+        if (readyButton) {
+          readyButton.disabled = hasSentReady;
+          readyButton.textContent = hasSentReady ? "準備OK済み" : "準備OK";
+        }
+      } else {
+        // 両者が準備完了
+        battleStatusText.textContent = "五言絶句を詠みましょう。";
+        if (!alreadyStarted) {
+          updateDoc(matchRef, { battleStarted: true, startedAt: serverTimestamp() }).catch(
+            () => {}
+          );
+        }
+        if (!battleReady) {
+          battleReady = true;
+          poemInput.disabled = false;
+          poemSendButton.disabled = false;
+          battleHelperText.textContent =
+            "5分以内に送信してください。送信後は内容を編集できません。";
+          startTimer(5);
+          if (readyButton) {
+            readyButton.disabled = true;
+            readyButton.textContent = "バトル中";
+          }
+        }
       }
     } else if (data.status === "finished") {
       battleStatusText.textContent = "バトル終了";
@@ -382,6 +465,11 @@ battleButton.addEventListener("click", async () => {
   battleHelperText.textContent = "対戦相手を探しています…";
   stopTimer();
   timerDisplay.textContent = "05:00";
+  hasSentReady = false;
+  if (readyButton) {
+    readyButton.disabled = true;
+    readyButton.textContent = "準備OK";
+  }
 
   try {
     showBattle();
@@ -392,7 +480,6 @@ battleButton.addEventListener("click", async () => {
     currentIsPlayer1 = isPlayer1;
 
     listenMatch(matchId, isPlayer1);
-    startTimer(5);
   } catch (e) {
     console.error(e);
     alert("マッチングに失敗しました。時間をおいて再度お試しください。");
@@ -444,3 +531,25 @@ poemSendButton.addEventListener("click", async () => {
 backToHomeButton.addEventListener("click", () => {
   showHome();
 });
+
+// 準備OKボタン
+if (readyButton) {
+  readyButton.addEventListener("click", async () => {
+    if (!currentMatchId || currentIsPlayer1 === null || hasSentReady) return;
+    hasSentReady = true;
+    readyButton.disabled = true;
+    readyButton.textContent = "準備OK済み";
+
+    try {
+      const matchRef = doc(db, "matches", currentMatchId);
+      const field = currentIsPlayer1 ? "player1Ready" : "player2Ready";
+      await updateDoc(matchRef, { [field]: true });
+    } catch (e) {
+      console.error(e);
+      alert("準備OKの送信に失敗しました。もう一度お試しください。");
+      hasSentReady = false;
+      readyButton.disabled = false;
+      readyButton.textContent = "準備OK";
+    }
+  });
+}
