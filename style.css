@@ -462,14 +462,11 @@ body {
   padding-inline: 32px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.28), transparent 60%),
-    linear-gradient(120deg, #22d3ee 0%, #a855f7 40%, #f97316 100%);
-  color: #020617;
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5f2ff;
   box-shadow:
-    0 0 12px rgba(56, 189, 248, 0.85),
-    0 0 26px rgba(168, 85, 247, 0.7),
-    0 0 44px rgba(249, 115, 22, 0.55);
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 18px rgba(56, 189, 248, 0.7);
   overflow: hidden;
 }
 
@@ -482,73 +479,43 @@ body {
   pointer-events: none;
 }
 
-/* 走るネオンの筋 */
 .battle-button::before {
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(248, 250, 252, 0.3) 35%,
-    rgba(248, 250, 252, 0.8) 50%,
-    rgba(248, 250, 252, 0.3) 65%,
-    transparent 100%
-  );
-  mix-blend-mode: screen;
-  translate: -120% 0;
-  animation: battle-neon-sweep 2.4s linear infinite;
+  border-radius: inherit;
+  inset: -1px;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#020617, #020617) padding-box,
+    linear-gradient(120deg, #38bdf8, #0ea5e9, #38bdf8) border-box;
+  box-shadow:
+    0 0 10px rgba(56, 189, 248, 0.9),
+    0 0 24px rgba(56, 189, 248, 0.9);
 }
 
-/* 外側のチラつくグロー */
 .battle-button::after {
-  border: 1px solid rgba(248, 250, 252, 0.65);
-  box-shadow:
-    0 0 18px rgba(56, 189, 248, 0.9),
-    0 0 32px rgba(236, 72, 153, 0.9);
-  opacity: 0.85;
-  animation: battle-neon-flicker 1.7s infinite steps(2, end);
+  background: radial-gradient(circle at 50% 50%, rgba(248, 250, 252, 0), transparent 60%);
+  opacity: 0;
 }
 
 .battle-button:hover {
-  transform: translateY(-1px) scale(1.02);
-  box-shadow:
-    0 0 20px rgba(56, 189, 248, 1),
-    0 0 40px rgba(168, 85, 247, 0.9),
-    0 0 60px rgba(249, 115, 22, 0.9);
+  background: radial-gradient(circle at 50% 40%, rgba(248, 250, 252, 0.9), rgba(15, 23, 42, 0.9));
+  color: #020617;
+  transform: translateY(-1px);
 }
 
 .battle-button:active {
-  transform: translateY(0) scale(0.99);
-  box-shadow:
-    0 0 16px rgba(56, 189, 248, 0.9),
-    0 0 30px rgba(168, 85, 247, 0.8);
+  transform: translateY(0);
 }
 
-@keyframes battle-neon-sweep {
+.battle-button:hover::after {
+  animation: battle-neon-fill 0.8s infinite steps(2, end);
+}
+
+@keyframes battle-neon-fill {
   0% {
-    translate: -140% 0;
-  }
-  60% {
-    translate: 40% 0;
+    opacity: 0.1;
   }
   100% {
-    translate: 140% 0;
-  }
-}
-
-@keyframes battle-neon-flicker {
-  0% {
-    opacity: 0.35;
-  }
-  40% {
-    opacity: 0.9;
-  }
-  55% {
-    opacity: 0.2;
-  }
-  75% {
     opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
   }
 }
 
