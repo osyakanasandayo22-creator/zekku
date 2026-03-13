@@ -19,41 +19,39 @@
       </header>
 
       <main class="app-main">
-        <!-- ホーム：モード選択＋スタートボタンのみ -->
+        <!-- ホーム：説明テキスト＋モード選択タグ＋バトるボタン -->
         <section class="home" id="home-view">
-          <div class="home-header">
-            <div class="home-title-block">
-              <h2>詩のマーケットへ</h2>
-              <p>スタイルを選び、「バトルを開始」で詩人との一局へ。</p>
+          <div class="home-row">
+            <div class="home-copy">
+              <p class="copy-line">絶句でネット対戦。</p>
+              <p class="copy-line">絶句で賭ける。</p>
+              <p class="copy-line">絶句で投資する。</p>
             </div>
-          </div>
 
-          <div class="mode-switch">
-            <button class="mode-chip active" data-mode="gogon-zekku">
-              <span class="mode-label">五言絶句</span>
-              <span class="mode-tag">利用中</span>
-            </button>
-            <button class="mode-chip disabled" data-mode="gogon-risshi" disabled>
-              <span class="mode-label">五言律詩</span>
-              <span class="mode-tag">準備中</span>
-            </button>
-            <button class="mode-chip disabled" data-mode="shichigon-zekku" disabled>
-              <span class="mode-label">七言絶句</span>
-              <span class="mode-tag">準備中</span>
-            </button>
-            <button class="mode-chip disabled" data-mode="shichigon-risshi" disabled>
-              <span class="mode-label">七言律詩</span>
-              <span class="mode-tag">準備中</span>
-            </button>
-          </div>
+            <div class="home-modes">
+              <button class="mode-chip primary-mode" data-mode="gogon-zekku">
+                <span class="mode-label">五言絶句</span>
+                <span class="mode-tag">デフォルト</span>
+              </button>
+              <button class="mode-chip disabled" data-mode="gogon-risshi" disabled>
+                <span class="mode-label">五言律詩</span>
+                <span class="mode-tag">準備中</span>
+              </button>
+              <button class="mode-chip disabled" data-mode="shichigon-zekku" disabled>
+                <span class="mode-label">七言絶句</span>
+                <span class="mode-tag">準備中</span>
+              </button>
+              <button class="mode-chip disabled" data-mode="shichigon-risshi" disabled>
+                <span class="mode-label">七言律詩</span>
+                <span class="mode-tag">準備中</span>
+              </button>
+            </div>
 
-          <div class="main-action main-action-home">
-            <button id="battle-button" class="primary-button">
-              バトルを開始
-            </button>
-            <p class="helper-text">
-              五言絶句モードで 1 対 1 のオンラインバトルを開始します。
-            </p>
+            <div class="home-action">
+              <button id="battle-button" class="primary-button">
+                バトる
+              </button>
+            </div>
           </div>
         </section>
 
