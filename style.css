@@ -155,7 +155,8 @@ body {
   width: 70%;
   margin: 0 auto;
   border-radius: 999px;
-  border: 1px solid transparent;
+  border: 3px solid transparent;
+  border-image: linear-gradient(135deg, #facc15, #38bdf8) 1;
   background: rgba(15, 23, 42, 0.92);
   padding: 10px 16px;
   display: flex;
@@ -182,27 +183,6 @@ body {
 .mode-select-arrow {
   font-size: 11px;
   color: #9ca3af;
-}
-
-.mode-select-trigger::before {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, rgba(250, 204, 21, 0.95), rgba(56, 189, 248, 0.9))
-      border-box;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 1;
-  box-shadow:
-    0 0 24px rgba(250, 204, 21, 1),
-    0 0 40px rgba(56, 189, 248, 0.95);
 }
 
 .mode-select-trigger.open {
