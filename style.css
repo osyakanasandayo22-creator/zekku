@@ -518,12 +518,16 @@ body {
     0 0 12px rgba(56, 189, 248, 0.9),
     0 0 32px rgba(56, 189, 248, 0.9);
   overflow: hidden;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .primary-button.battle-button::before {
   content: "";
   position: absolute;
-  inset: 3px;
+  inset: 0;
   border-radius: inherit;
   background: #ffffff;
   opacity: 0;
@@ -532,7 +536,9 @@ body {
 }
 
 .primary-button.battle-button:hover {
-  color: #0b1120;
+  background-image: none;
+  background-color: #ffffff;
+  color: #020617;
   text-shadow:
     0 0 10px rgba(248, 250, 252, 1),
     0 0 26px rgba(191, 219, 254, 1);
