@@ -9,9 +9,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 10% -10%, rgba(56, 189, 248, 0.35), transparent 60%),
-    radial-gradient(circle at 95% 0%, rgba(236, 72, 153, 0.35), transparent 60%),
-    radial-gradient(circle at 50% 120%, #020617 0, #020617 70%);
+    radial-gradient(circle at 10% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
+    radial-gradient(circle at 95% 0%, rgba(236, 72, 153, 0.18), transparent 60%),
+    #02010a;
   color: #e5e7eb;
 }
 
@@ -31,13 +31,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.65);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.6);
   background:
-    radial-gradient(circle at top left, rgba(56, 189, 248, 0.5), transparent 60%),
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.32), transparent 60%),
     radial-gradient(circle at top left, #020617, #030712 55%, #020617 100%);
   box-shadow:
     0 0 0 1px rgba(15, 23, 42, 1),
-    0 22px 70px rgba(0, 0, 0, 0.95);
+    0 14px 40px rgba(0, 0, 0, 0.9);
+  position: relative;
+}
+
+.app-header::after {
+  content: "";
+  position: absolute;
+  left: 40px;
+  right: 32px;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(56, 189, 248, 0.9), rgba(236, 72, 153, 0.7));
+  box-shadow:
+    0 0 8px rgba(56, 189, 248, 0.9),
+    0 0 18px rgba(236, 72, 153, 0.9);
+  opacity: 0.75;
 }
 
 .logo-area {
@@ -58,8 +75,8 @@ body {
   font-weight: 700;
   font-size: 20px;
   box-shadow:
-    0 0 0 1px rgba(236, 72, 153, 0.8),
-    0 0 22px rgba(236, 72, 153, 0.9);
+    0 0 0 1px rgba(236, 72, 153, 0.9),
+    0 0 18px rgba(236, 72, 153, 0.85);
 }
 
 .logo-text h1 {
@@ -68,8 +85,8 @@ body {
   letter-spacing: 0.08em;
   font-weight: 500;
   text-shadow:
-    0 0 8px rgba(56, 189, 248, 0.75),
-    0 0 24px rgba(56, 189, 248, 0.6);
+    0 0 6px rgba(56, 189, 248, 0.7),
+    0 0 18px rgba(56, 189, 248, 0.5);
 }
 
 .logo-text p {
@@ -114,8 +131,8 @@ body {
   font-size: 16px;
   letter-spacing: 0.08em;
   text-shadow:
-    0 0 8px rgba(129, 140, 248, 0.7),
-    0 0 26px rgba(129, 140, 248, 0.5);
+    0 0 5px rgba(129, 140, 248, 0.6),
+    0 0 14px rgba(129, 140, 248, 0.4);
 }
 
 .copy-line + .copy-line {
@@ -138,7 +155,7 @@ body {
   width: 70%;
   margin: 0 auto;
   border-radius: 999px;
-  border: 1px solid rgba(56, 189, 248, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.7);
   background: rgba(15, 23, 42, 0.9);
   padding: 10px 16px;
   display: flex;
@@ -326,8 +343,8 @@ body {
 
 .panel {
   background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.18), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.16), transparent 55%),
     radial-gradient(circle at top left, #020617, #020617 45%, #030712 100%);
   border-radius: 18px;
   padding: 20px 20px 18px;
@@ -337,7 +354,26 @@ body {
   gap: 16px;
   box-shadow:
     0 0 0 1px rgba(15, 23, 42, 0.9),
-    0 26px 70px rgba(0, 0, 0, 0.98);
+    0 20px 50px rgba(0, 0, 0, 0.96);
+  position: relative;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.9), rgba(236, 72, 153, 0.8))
+      border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.5;
 }
 
 .panel-main {
@@ -501,7 +537,7 @@ body {
   gap: 12px;
   border-radius: 999px;
   padding: 6px 10px;
-  background: radial-gradient(circle at 0% 50%, rgba(56, 189, 248, 0.08), transparent 55%);
+  background: radial-gradient(circle at 0% 50%, rgba(56, 189, 248, 0.12), transparent 55%);
 }
 
 .timer {
@@ -526,7 +562,7 @@ body {
   border: 1px solid rgba(56, 189, 248, 0.6);
   box-shadow:
     0 0 0 1px rgba(15, 23, 42, 0.9),
-    0 0 26px rgba(56, 189, 248, 0.8);
+    0 0 20px rgba(56, 189, 248, 0.7);
 }
 
 .battle-status-text {
@@ -581,7 +617,7 @@ body {
   border-radius: 12px;
   border: 1px solid rgba(31, 41, 55, 0.95);
   background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.14), transparent 55%),
     radial-gradient(circle at top left, #020617, #030712);
   display: flex;
   flex-direction: column;
@@ -590,13 +626,13 @@ body {
 
 .poem-card.me {
   background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.35), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.26), transparent 55%),
     radial-gradient(circle at top left, #082f49, #020617);
 }
 
 .poem-card.other {
   background:
-    radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.35), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.26), transparent 55%),
     radial-gradient(circle at top left, #422006, #111827);
 }
 
@@ -630,7 +666,7 @@ body {
   gap: 6px;
   border-top: 1px solid rgba(31, 41, 55, 1);
   background:
-    radial-gradient(circle at 50% -40%, rgba(56, 189, 248, 0.2), transparent 60%),
+    radial-gradient(circle at 50% -40%, rgba(56, 189, 248, 0.16), transparent 60%),
     #020617;
 }
 
