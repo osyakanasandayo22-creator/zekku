@@ -56,6 +56,7 @@ let currentIsPlayer1 = null;
 let matchUnsubscribe = null;
 let timerIntervalId = null;
 let currentMode = "gogon-zekku";
+let battleReady = false;
 
 // ===== ユーザー名の保存／読み込み =====
 function loadUserName() {
@@ -82,6 +83,7 @@ function showHome() {
   cleanupMatchListener();
   currentMatchId = null;
   currentIsPlayer1 = null;
+  battleReady = false;
   poemInput.value = "";
   poemInput.disabled = false;
   poemSendButton.disabled = false;
@@ -281,8 +283,22 @@ function listenMatch(matchId, isPlayer1) {
     // ステータス文
     if (data.status === "waiting") {
       battleStatusText.textContent = "対戦相手を探しています…";
+      battleReady = false;
+      stopTimer();
+      timerDisplay.textContent = "05:00";
+      poemInput.disabled = true;
+      poemSendButton.disabled = true;
+      battleHelperText.textContent = "対戦相手を探しています…";
     } else if (data.status === "ongoing") {
       battleStatusText.textContent = "対戦相手が見つかりました。五言絶句を詠みましょう。";
+      if (!battleReady) {
+        battleReady = true;
+        poemInput.disabled = false;
+        poemSendButton.disabled = false;
+        battleHelperText.textContent =
+          "5分以内に送信してください。送信後は内容を編集できません。";
+        startTimer(5);
+      }
     } else if (data.status === "finished") {
       battleStatusText.textContent = "バトル終了";
     }
@@ -338,10 +354,17 @@ battleButton.addEventListener("click", async () => {
   battleButton.disabled = true;
   battleButton.textContent = "マッチング中…";
 
+  // 相手が見つかるまでは対戦を開始しない（入力・タイマーは停止したまま）
+  poemInput.value = "";
+  poemInput.disabled = true;
+  poemSendButton.disabled = true;
+  battleHelperText.textContent = "対戦相手を探しています…";
+  stopTimer();
+  timerDisplay.textContent = "05:00";
+
   try {
     showBattle();
     battleStatusText.textContent = "対戦相手を探しています…";
-    timerDisplay.textContent = "05:00";
 
     const { matchId, isPlayer1 } = await findOrCreateMatch(currentUserName);
     currentMatchId = matchId;
