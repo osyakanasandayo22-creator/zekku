@@ -9,9 +9,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 10% 0%, #1e293b 0, transparent 55%),
-    radial-gradient(circle at 90% 0%, #4c1d95 0, transparent 55%),
-    radial-gradient(circle at 50% 120%, #0f172a 0, #020617 70%);
+    radial-gradient(circle at 10% -10%, rgba(56, 189, 248, 0.35), transparent 60%),
+    radial-gradient(circle at 95% 0%, rgba(236, 72, 153, 0.35), transparent 60%),
+    radial-gradient(circle at 50% 120%, #020617 0, #020617 70%);
   color: #e5e7eb;
 }
 
@@ -31,11 +31,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.35);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.65);
   background:
-    radial-gradient(circle at top left, rgba(56, 189, 248, 0.3), transparent 60%),
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.5), transparent 60%),
     radial-gradient(circle at top left, #020617, #030712 55%, #020617 100%);
-  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 22px 70px rgba(0, 0, 0, 0.95);
 }
 
 .logo-area {
@@ -51,10 +53,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 30% 30%, #6b7280, #020617);
+  background: radial-gradient(circle at 30% 30%, #ec4899, #020617);
   color: #f9fafb;
   font-weight: 700;
   font-size: 20px;
+  box-shadow:
+    0 0 0 1px rgba(236, 72, 153, 0.8),
+    0 0 22px rgba(236, 72, 153, 0.9);
 }
 
 .logo-text h1 {
@@ -62,6 +67,9 @@ body {
   font-size: 20px;
   letter-spacing: 0.08em;
   font-weight: 500;
+  text-shadow:
+    0 0 8px rgba(56, 189, 248, 0.75),
+    0 0 24px rgba(56, 189, 248, 0.6);
 }
 
 .logo-text p {
@@ -106,8 +114,8 @@ body {
   font-size: 16px;
   letter-spacing: 0.08em;
   text-shadow:
-    0 0 6px rgba(56, 189, 248, 0.6),
-    0 0 22px rgba(56, 189, 248, 0.4);
+    0 0 8px rgba(129, 140, 248, 0.7),
+    0 0 26px rgba(129, 140, 248, 0.5);
 }
 
 .copy-line + .copy-line {
@@ -130,8 +138,8 @@ body {
   width: 70%;
   margin: 0 auto;
   border-radius: 999px;
-  border: 1px solid #4b5563;
-  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  background: rgba(15, 23, 42, 0.9);
   padding: 10px 16px;
   display: flex;
   align-items: center;
@@ -162,7 +170,7 @@ body {
   border-color: #38bdf8;
   background:
     radial-gradient(circle at top left, #0f172a, #082f49),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.2), transparent 40%, rgba(56, 189, 248, 0.2));
+    linear-gradient(90deg, rgba(56, 189, 248, 0.6), transparent 40%, rgba(236, 72, 153, 0.6));
   box-shadow:
     0 0 0 1px rgba(56, 189, 248, 0.35),
     0 0 24px rgba(8, 47, 73, 0.9);
@@ -318,8 +326,8 @@ body {
 
 .panel {
   background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08), transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.08), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.18), transparent 55%),
     radial-gradient(circle at top left, #020617, #020617 45%, #030712 100%);
   border-radius: 18px;
   padding: 20px 20px 18px;
@@ -329,7 +337,7 @@ body {
   gap: 16px;
   box-shadow:
     0 0 0 1px rgba(15, 23, 42, 0.9),
-    0 24px 60px rgba(15, 23, 42, 0.95);
+    0 26px 70px rgba(0, 0, 0, 0.98);
 }
 
 .panel-main {
@@ -518,7 +526,7 @@ body {
   border: 1px solid rgba(56, 189, 248, 0.6);
   box-shadow:
     0 0 0 1px rgba(15, 23, 42, 0.9),
-    0 0 20px rgba(56, 189, 248, 0.5);
+    0 0 26px rgba(56, 189, 248, 0.8);
 }
 
 .battle-status-text {
@@ -573,7 +581,7 @@ body {
   border-radius: 12px;
   border: 1px solid rgba(31, 41, 55, 0.95);
   background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
     radial-gradient(circle at top left, #020617, #030712);
   display: flex;
   flex-direction: column;
@@ -582,13 +590,13 @@ body {
 
 .poem-card.me {
   background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.2), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.35), transparent 55%),
     radial-gradient(circle at top left, #082f49, #020617);
 }
 
 .poem-card.other {
   background:
-    radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.2), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.35), transparent 55%),
     radial-gradient(circle at top left, #422006, #111827);
 }
 
@@ -620,9 +628,9 @@ body {
   display: flex;
   justify-content: center;
   gap: 6px;
-  border-top: 1px solid rgba(31, 41, 55, 0.95);
+  border-top: 1px solid rgba(31, 41, 55, 1);
   background:
-    radial-gradient(circle at 50% -40%, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(circle at 50% -40%, rgba(56, 189, 248, 0.2), transparent 60%),
     #020617;
 }
 
