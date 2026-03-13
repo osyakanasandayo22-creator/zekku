@@ -145,6 +145,22 @@ body {
   justify-content: center;
 }
 
+.home-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.home-controls .home-modes {
+  width: auto;
+}
+
+.home-controls .home-action {
+  display: flex;
+  justify-content: center;
+}
+
 .mode-select {
   position: relative;
   width: 220px;
