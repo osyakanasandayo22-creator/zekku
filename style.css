@@ -528,6 +528,7 @@ body {
   background: #ffffff;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.25s ease-out;
 }
 
 .primary-button.battle-button:hover {
@@ -546,19 +547,7 @@ body {
 }
 
 .primary-button.battle-button:hover::before {
-  animation: battle-neon-flash 0.5s infinite steps(2, end);
-}
-
-@keyframes battle-neon-flash {
-  0% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.1;
-  }
+  opacity: 1;
 }
 
 .secondary-button {
