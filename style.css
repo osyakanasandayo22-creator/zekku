@@ -155,8 +155,8 @@ body {
   width: 70%;
   margin: 0 auto;
   border-radius: 999px;
-  border: 1px solid rgba(56, 189, 248, 0.7);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid transparent;
+  background: rgba(15, 23, 42, 0.92);
   padding: 10px 16px;
   display: flex;
   align-items: center;
@@ -171,6 +171,8 @@ body {
     border-color 0.12s ease,
     box-shadow 0.12s ease,
     color 0.12s ease;
+  position: relative;
+  overflow: visible;
 }
 
 .mode-selected-label {
@@ -182,15 +184,32 @@ body {
   color: #9ca3af;
 }
 
+.mode-select-trigger::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(250, 204, 21, 0.95), rgba(56, 189, 248, 0.9))
+      border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.9;
+  box-shadow:
+    0 0 12px rgba(250, 204, 21, 0.8),
+    0 0 24px rgba(56, 189, 248, 0.7);
+}
+
 .mode-select-trigger.open {
   width: 100%;
-  border-color: #38bdf8;
   background:
     radial-gradient(circle at top left, #0f172a, #082f49),
     linear-gradient(90deg, rgba(56, 189, 248, 0.6), transparent 40%, rgba(236, 72, 153, 0.6));
-  box-shadow:
-    0 0 0 1px rgba(56, 189, 248, 0.35),
-    0 0 24px rgba(8, 47, 73, 0.9);
   color: #e0f2fe;
   animation: neon-flicker 0.9s linear;
 }
@@ -454,8 +473,6 @@ body {
   padding: 10px 20px;
   transition: box-shadow 0.12s ease, background-color 0.12s ease, color 0.12s ease, transform 0.08s ease;
   min-height: 40px;
-  position: relative;
-  overflow: visible;
 }
 
 .primary-button {
@@ -463,33 +480,14 @@ body {
   color: #020617;
   box-shadow:
     0 10px 30px rgba(8, 47, 73, 0.7),
-    0 0 0 1px rgba(250, 204, 21, 0.7),
-    0 0 18px rgba(250, 204, 21, 0.8);
-}
-
-.primary-button::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1px solid transparent;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, rgba(250, 204, 21, 0.95), rgba(56, 189, 248, 0.9))
-      border-box;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+    0 0 0 1px rgba(56, 189, 248, 0.45);
 }
 
 .primary-button:hover {
   background: linear-gradient(135deg, #38bdf8, #22d3ee);
   box-shadow:
     0 16px 40px rgba(8, 47, 73, 0.9),
-    0 0 0 1px rgba(250, 204, 21, 0.9),
-    0 0 24px rgba(250, 204, 21, 0.95);
+    0 0 0 1px rgba(56, 189, 248, 0.6);
   transform: translateY(-1px);
 }
 
@@ -498,8 +496,7 @@ body {
   transform: translateY(0);
   box-shadow:
     0 6px 18px rgba(8, 47, 73, 0.8),
-    0 0 0 1px rgba(250, 204, 21, 0.8),
-    0 0 18px rgba(250, 204, 21, 0.9);
+    0 0 0 1px rgba(56, 189, 248, 0.5);
 }
 
 .primary-button:disabled {
@@ -512,28 +509,11 @@ body {
 .secondary-button {
   background: transparent;
   color: #e5e7eb;
-  border: 1px solid transparent;
-}
-
-.secondary-button::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1px solid transparent;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, rgba(250, 204, 21, 0.7), rgba(56, 189, 248, 0.75))
-      border-box;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  border: 1px solid #4b5563;
 }
 
 .secondary-button:hover {
-  background: rgba(31, 41, 55, 0.9);
+  background: rgba(31, 41, 55, 0.8);
 }
 
 .primary-button.full {
