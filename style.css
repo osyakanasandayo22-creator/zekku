@@ -189,8 +189,9 @@ body {
 .mode-select-trigger.open {
   width: 100%;
   background:
-    radial-gradient(circle at top left, #0f172a, #082f49),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.6), transparent 40%, rgba(236, 72, 153, 0.6));
+    radial-gradient(circle at top left, #0f172a, #082f49) padding-box,
+    linear-gradient(90deg, rgba(56, 189, 248, 0.7), transparent 40%, rgba(236, 72, 153, 0.7)) padding-box,
+    linear-gradient(135deg, #facc15, #38bdf8) border-box;
   color: #e0f2fe;
   animation: neon-flicker 0.9s linear;
 }
