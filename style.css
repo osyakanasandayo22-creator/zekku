@@ -156,8 +156,9 @@ body {
   margin: 0 auto;
   border-radius: 9999px;
   border: 2px solid transparent;
-  border-image: linear-gradient(135deg, #facc15, #38bdf8) 1;
-  background: rgba(15, 23, 42, 0.92);
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.96)) padding-box,
+    linear-gradient(135deg, #facc15, #38bdf8) border-box;
   padding: 10px 16px;
   display: flex;
   align-items: center;
