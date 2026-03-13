@@ -872,27 +872,4 @@ body {
   .poem-compare {
     grid-template-columns: 1fr;
   }
-
-  /* スマホ時は入力欄を横書き＆幅いっぱいにして挙動を安定させる */
-  #battle-view .poem-input-area {
-    align-items: stretch;
-    margin-top: 16px;
-    gap: 12px;
-  }
-
-  #battle-view .poem-input-area textarea {
-    writing-mode: horizontal-tb;
-    text-orientation: mixed;
-    min-height: 160px;
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #4b5563;
-    background: rgba(15, 23, 42, 0.9);
-    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
-    font-size: 16px;
-    line-height: 1.6;
-    letter-spacing: 0.08em;
-    resize: vertical;
-  }
 }
