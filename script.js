@@ -32,7 +32,6 @@ const battleButton = document.getElementById("battle-button");
 const modeSelectTrigger = document.getElementById("mode-select-trigger");
 const modeSelectMenu = document.getElementById("mode-select-menu");
 const modeSelectedLabel = document.getElementById("mode-selected-label");
-const modeSelectedTag = document.getElementById("mode-selected-tag");
 
 const homeView = document.getElementById("home-view");
 const battleView = document.getElementById("battle-view");
@@ -137,12 +136,10 @@ if (modeSelectTrigger && modeSelectMenu) {
     if (!option || option.classList.contains("disabled")) return;
 
     const label = option.getAttribute("data-label") || "";
-    const tag = option.getAttribute("data-tag") || "";
     const mode = option.getAttribute("data-mode") || "gogon-zekku";
 
     currentMode = mode;
     if (modeSelectedLabel) modeSelectedLabel.textContent = label;
-    if (modeSelectedTag) modeSelectedTag.textContent = tag;
 
     closeModeMenu();
   });
