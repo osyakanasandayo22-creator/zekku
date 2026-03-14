@@ -110,10 +110,11 @@ function updateStrokeGrid() {
   if (!strokeGrid) return;
   const cells = strokeGrid.querySelectorAll(".stroke-grid-cell");
   const chars = getPoemCharsInOrder();
-  // 縦書き入力に対応：1列目(上→下)=0,1,2,3,4、2列目=5〜9…。グリッドは5行×4列で行優先なので、
-  // 文字インデックス i は セル (i%5, i/5) = 行優先インデックス (i%5)*4 + floor(i/5) に表示する。
+    // 右上から縦に並べ、行が変わったら左の列の一番上から。右列=0〜4, その左=5〜9, その左=10〜14, 左列=15〜19。
+    // グリッドは5行×4列で列0が左・列3が右。セルは行優先なので (row,col) = row*4+col。
+    // 文字 i → 列 3-floor(i/5), 行 i%5 → cellIndex = (i%5)*4 + (3 - floor(i/5))
   for (let i = 0; i < 20; i += 1) {
-    const cellIndex = (i % 5) * 4 + Math.floor(i / 5);
+    const cellIndex = (i % 5) * 4 + (3 - Math.floor(i / 5));
     const cell = cells[cellIndex];
     if (!cell) continue;
     const char = chars[i];
