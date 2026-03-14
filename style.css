@@ -818,17 +818,19 @@ body {
   box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
 }
 
-/* 対戦中の入力欄を縦書き・フレームなし・シンプルに */
+/* 対戦中の入力欄を縦書き・フレームなし・シンプルに（PC：大きく二つ並び） */
 #battle-view .poem-input-area {
   align-items: center;
   margin-top: 40px;
-  gap: 16px;
+  gap: 24px;
 }
 
 #battle-view .poem-input-row {
-  align-items: center;
+  align-items: stretch;
+  gap: 32px;
 }
 
+/* PC：入力フォームを大きく */
 #battle-view .poem-input-area textarea {
   writing-mode: vertical-rl;
   text-orientation: upright;
@@ -837,12 +839,33 @@ body {
   background: transparent;
   box-shadow: none;
   resize: none;
-  min-height: 320px;
-  width: 200px;
+  min-height: 460px;
+  width: 300px;
   padding: 0;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1.8;
   letter-spacing: 0.15em;
+}
+
+/* PC：画数表示枠を入力フォームと同じ大きさ（高さ揃え・対応感） */
+#battle-view .poem-input-left,
+#battle-view .poem-input-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#battle-view .stroke-grid {
+  width: 368px;   /* 460 × (4/5) で入力エリアと同じ高さに合わせる */
+  height: 460px;
+  aspect-ratio: auto;
+  padding: 14px;
+  gap: 6px;
+}
+
+#battle-view .stroke-grid-cell {
+  font-size: 18px;
 }
 
 #battle-view .poem-input-area textarea::placeholder {
@@ -1044,6 +1067,8 @@ body {
 
   #battle-view .stroke-grid {
     width: 140px;
+    height: auto;
+    aspect-ratio: 4 / 5;
     padding: 8px;
     gap: 3px;
   }
