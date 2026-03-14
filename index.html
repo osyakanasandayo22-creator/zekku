@@ -25,12 +25,34 @@
           <button id="login-button" type="button" class="topbar-login-button">
             ログイン
           </button>
-          <div id="user-info" class="topbar-user-info" hidden>
-            <span id="user-name" class="topbar-user-name"></span>
+          <button
+            id="profile-button"
+            type="button"
+            class="topbar-profile-button"
+            hidden
+          >
+            <span
+              id="profile-button-name"
+              class="topbar-user-name"
+            ></span>
+            <span class="topbar-profile-icon">▼</span>
+          </button>
+          <div
+            id="profile-menu"
+            class="topbar-profile-menu"
+            hidden
+            role="menu"
+            aria-labelledby="profile-button"
+          >
+            <div
+              id="profile-menu-name"
+              class="topbar-profile-menu-header"
+            ></div>
             <button
-              id="logout-button"
+              id="logout-menu-button"
               type="button"
-              class="topbar-logout-button"
+              class="topbar-profile-menu-item"
+              role="menuitem"
             >
               ログアウト
             </button>

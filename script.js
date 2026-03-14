@@ -67,9 +67,11 @@ const opponentPoemDisplay = document.getElementById("opponent-poem-display");
 const backToHomeButton = document.getElementById("back-to-home-button");
 const strokeGrid = document.getElementById("stroke-grid");
 const loginButton = document.getElementById("login-button");
-const logoutButton = document.getElementById("logout-button");
-const userInfo = document.getElementById("user-info");
-const userNameLabel = document.getElementById("user-name");
+const profileButton = document.getElementById("profile-button");
+const profileButtonName = document.getElementById("profile-button-name");
+const profileMenu = document.getElementById("profile-menu");
+const profileMenuName = document.getElementById("profile-menu-name");
+const logoutMenuButton = document.getElementById("logout-menu-button");
 
 // ===== 状態 =====
 let currentUserName = "";
@@ -101,12 +103,16 @@ const provider = new GoogleAuthProvider();
 onAuthStateChanged(auth, (user) => {
   currentUser = user || null;
 
-  if (!loginButton || !logoutButton || !userInfo || !userNameLabel) return;
+  if (!loginButton || !profileButton || !profileButtonName || !profileMenu || !profileMenuName) {
+    return;
+  }
 
   if (user) {
     const displayName = user.displayName || user.email || "ゲスト";
-    userNameLabel.textContent = displayName;
-    userInfo.hidden = false;
+    profileButtonName.textContent = displayName;
+    profileMenuName.textContent = displayName;
+
+    profileButton.hidden = false;
     loginButton.style.display = "none";
 
     // ハンドルネーム未設定なら、Firebase の表示名をデフォルトとして使う
@@ -115,7 +121,8 @@ onAuthStateChanged(auth, (user) => {
       saveUserName(displayName);
     }
   } else {
-    userInfo.hidden = true;
+    profileButton.hidden = true;
+    profileMenu.hidden = true;
     loginButton.style.display = "";
   }
 });
@@ -756,11 +763,27 @@ if (loginButton) {
   });
 }
 
-// ログアウトボタン
-if (logoutButton) {
-  logoutButton.addEventListener("click", async () => {
+// プロフィールメニュー開閉
+if (profileButton && profileMenu) {
+  profileButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isHidden = profileMenu.hidden;
+    profileMenu.hidden = !isHidden;
+  });
+
+  window.addEventListener("click", () => {
+    if (!profileMenu.hidden) {
+      profileMenu.hidden = true;
+    }
+  });
+}
+
+// プロフィールメニュー内のログアウト
+if (logoutMenuButton) {
+  logoutMenuButton.addEventListener("click", async () => {
     try {
       await signOut(auth);
+      if (profileMenu) profileMenu.hidden = true;
     } catch (e) {
       console.error(e);
       alert("ログアウトに失敗しました。");
