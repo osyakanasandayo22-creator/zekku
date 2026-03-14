@@ -453,23 +453,25 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  align-items: stretch;
+  gap: 28px;
   width: 100%;
-  max-width: 520px;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 #ready-view .ready-card {
   flex: 1;
-  min-width: 200px;
-  max-width: 240px;
-  padding: 20px 24px;
+  min-width: 260px;
+  max-width: 320px;
+  padding: 28px 32px;
   background: rgba(15, 23, 42, 0.7);
-  border-radius: 16px;
+  border-radius: 20px;
   border: 1px solid rgba(148, 163, 184, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 #ready-view .ready-card-me {
@@ -484,10 +486,10 @@ body {
 
 #ready-view .ready-card-label {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: #64748b;
 }
 
@@ -501,15 +503,57 @@ body {
 
 #ready-view .ready-card-name {
   margin: 0;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
   color: #e2e8f0;
 }
 
+/* 自分のカード内：準備中はボタン、準備OK済みはテキスト表示 */
+#ready-view .ready-card-status-area {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+#ready-view .ready-card-status-area .ready-card-status {
+  display: none;
+  margin: 0;
+  font-size: 16px;
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-weight: 500;
+}
+
+#ready-view .ready-card-status-area.my-ready .ready-card-status {
+  display: block;
+  color: #0ea5e9;
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+#ready-view .ready-card-status-area .ready-card-ready-btn {
+  display: inline-flex;
+  width: 100%;
+  max-width: 200px;
+  justify-content: center;
+}
+
+#ready-view .ready-card-status-area.my-ready .ready-card-ready-btn {
+  display: none;
+}
+
+#ready-view .ready-card-me .ready-card-button {
+  width: 100%;
+  max-width: 220px;
+  margin-top: 4px;
+}
+
 #ready-view .ready-card-status {
   margin: 0;
-  font-size: 14px;
-  padding: 6px 14px;
+  font-size: 15px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-weight: 500;
 }
@@ -517,16 +561,6 @@ body {
 #ready-view .ready-card-status {
   color: #94a3b8;
   background: rgba(15, 23, 42, 0.6);
-}
-
-#ready-view .ready-card-me .ready-card-status:not([data-ready="true"]) {
-  color: #64748b;
-}
-
-#ready-view .ready-card-me .ready-card-status[data-ready="true"] {
-  color: #0ea5e9;
-  background: rgba(56, 189, 248, 0.2);
-  border: 1px solid rgba(56, 189, 248, 0.4);
 }
 
 #ready-view .ready-card-opponent .ready-card-status:not([data-ready="true"]) {
@@ -537,18 +571,6 @@ body {
   color: #ec4899;
   background: rgba(236, 72, 153, 0.15);
   border: 1px solid rgba(236, 72, 153, 0.3);
-}
-
-#ready-view .ready-action {
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-#ready-view .ready-action .primary-button {
-  min-width: 160px;
 }
 
 .panel::before {

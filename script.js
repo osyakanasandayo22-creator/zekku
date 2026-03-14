@@ -42,6 +42,7 @@ const resultView = document.getElementById("result-view");
 const readyStatusText = document.getElementById("ready-status-text");
 const readyMyName = document.getElementById("ready-my-name");
 const readyMyStatus = document.getElementById("ready-my-status");
+const readyMyStatusArea = document.getElementById("ready-my-status-area");
 const readyOpponentName = document.getElementById("ready-opponent-name");
 const readyOpponentStatus = document.getElementById("ready-opponent-status");
 const timerDisplay = document.getElementById("timer-display");
@@ -448,6 +449,7 @@ function listenMatch(matchId, isPlayer1) {
       readyMyStatus.textContent = myReady ? "準備OK" : "準備中";
       readyMyStatus.setAttribute("data-ready", myReady ? "true" : "false");
     }
+    if (readyMyStatusArea) readyMyStatusArea.classList.toggle("my-ready", myReady);
     if (readyOpponentName) readyOpponentName.textContent = opponentLabel;
     if (readyOpponentStatus) {
       readyOpponentStatus.textContent = opponentReady ? "準備OK" : "準備中";
