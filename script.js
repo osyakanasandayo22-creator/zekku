@@ -72,6 +72,29 @@ const profileButtonName = document.getElementById("profile-button-name");
 const profileMenu = document.getElementById("profile-menu");
 const profileMenuName = document.getElementById("profile-menu-name");
 const logoutMenuButton = document.getElementById("logout-menu-button");
+const strokeAssetValueEl = document.getElementById("stroke-asset-value");
+
+// ===== 画数資産（デフォルト500、入場料10、使用漢字の画数を控除） =====
+const DEFAULT_STROKE_ASSET = 500;
+const ENTRY_FEE = 10;
+const STROKE_ASSET_KEY = "strokeAsset";
+
+function getStrokeAsset() {
+  const saved = localStorage.getItem(STROKE_ASSET_KEY);
+  if (saved === null || saved === "") return DEFAULT_STROKE_ASSET;
+  const n = parseInt(saved, 10);
+  return Number.isNaN(n) ? DEFAULT_STROKE_ASSET : n;
+}
+
+function setStrokeAsset(value) {
+  const n = Math.max(0, Math.floor(value));
+  localStorage.setItem(STROKE_ASSET_KEY, String(n));
+  updateStrokeAssetDisplay();
+}
+
+function updateStrokeAssetDisplay() {
+  if (strokeAssetValueEl) strokeAssetValueEl.textContent = getStrokeAsset();
+}
 
 // ===== 状態 =====
 let currentUserName = "";
@@ -96,6 +119,7 @@ function saveUserName(name) {
 }
 
 loadUserName();
+updateStrokeAssetDisplay();
 
 // ===== ログイン状態の監視（Firebase Authentication） =====
 const provider = new GoogleAuthProvider();
@@ -393,6 +417,17 @@ function validateGogonZekku(poem) {
   return { ok: true, message: "" };
 }
 
+/** 詩文（漢字のみ）の合計画数を返す。未登録の文字は0として扱う。 */
+function getPoemStrokeTotal(poemText) {
+  const chars = poemText.replace(/[^\u4E00-\u9FFF]/g, "").split("");
+  let total = 0;
+  for (const char of chars) {
+    const n = STROKE_COUNT[char];
+    if (n !== undefined) total += n;
+  }
+  return total;
+}
+
 // ===== Firestore: 部屋ベースのマッチング =====
 // 部屋は最大2人。作成者を clientId で識別し、自分が作った部屋には参加しない。
 async function findOrCreateMatch(userName) {
@@ -604,6 +639,12 @@ battleButton.addEventListener("click", async () => {
     return;
   }
 
+  // 入場料（画数資産10）チェック
+  if (getStrokeAsset() < ENTRY_FEE) {
+    alert(`バトルに参加するには画数資産が${ENTRY_FEE}以上必要です。（現在：${getStrokeAsset()}）`);
+    return;
+  }
+
   let name = (currentUserName || "").trim();
   if (!name) {
     // Firebase の表示名／メールアドレスをデフォルトとして使う
@@ -650,6 +691,9 @@ battleButton.addEventListener("click", async () => {
     currentMatchId = matchId;
     currentIsPlayer1 = isPlayer1;
 
+    // 入場料を画数資産から控除
+    setStrokeAsset(getStrokeAsset() - ENTRY_FEE);
+
     listenMatch(matchId, isPlayer1);
   } catch (e) {
     console.error(e);
@@ -676,6 +720,12 @@ poemSendButton.addEventListener("click", async () => {
     return;
   }
 
+  const poemStrokes = getPoemStrokeTotal(text);
+  if (getStrokeAsset() < poemStrokes) {
+    alert(`画数資産が不足しています。この詩の合計画数は${poemStrokes}画です。（現在の画数資産：${getStrokeAsset()}）`);
+    return;
+  }
+
   poemSendButton.disabled = true;
   poemInput.disabled = true;
   battleHelperText.textContent = "あなたの作品を送信しました。相手の作品を待っています…";
@@ -687,6 +737,9 @@ poemSendButton.addEventListener("click", async () => {
     await updateDoc(matchRef, {
       [field]: text
     });
+
+    // 使用した漢字の画数を画数資産から控除
+    setStrokeAsset(getStrokeAsset() - poemStrokes);
 
     myPoemDisplay.textContent = text;
   } catch (e) {
