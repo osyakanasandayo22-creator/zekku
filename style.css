@@ -844,8 +844,14 @@ body {
   padding: 0;
   font-size: 50px;   /* 画数セルと同じ */
   font-weight: 600;
-  line-height: 1.84;   /* 縦書きの列幅を画数枠のセル幅に合わせる */
-  letter-spacing: 0.84em;  /* 縦書きの行間を画数枠のセル高に合わせる */
+  line-height: 1;   /* 選択時に文字の下に余白が出ないようにする */
+  letter-spacing: 0.84em;   /* 縦書きの行間を画数枠のセル高に合わせる */
+  overflow: hidden;   /* 下に出るスクロールバーを非表示 */
+  scrollbar-width: none;   /* Firefoxでスクロールバー非表示 */
+  -ms-overflow-style: none;   /* IE/Edgeでスクロールバー非表示 */
+}
+#battle-view .poem-input-area textarea::-webkit-scrollbar {
+  display: none;   /* Chrome/Safariでスクロールバー非表示 */
 }
 
 /* PC：画数表示枠を入力フォームと同じ大きさ（高さ揃え・対応感） */
