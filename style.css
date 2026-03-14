@@ -508,66 +508,66 @@ body {
   color: #e2e8f0;
 }
 
-/* 自分のカード内：準備中はボタン、準備OK済みはテキスト表示 */
-#ready-view .ready-card-status-area {
-  min-height: 48px;
+/* 自分のカード内：「準備中」の位置 = 1つのスロット（ボタン or テキスト） */
+#ready-view .ready-card-me .ready-card-slot {
+  width: 100%;
+  min-height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  margin: 4px 0;
 }
 
-#ready-view .ready-card-status-area .ready-card-status {
+#ready-view .ready-card-me .ready-card-slot .ready-card-status-text {
   display: none;
   margin: 0;
   font-size: 16px;
-  padding: 8px 18px;
-  border-radius: 24px;
   font-weight: 500;
-}
-
-#ready-view .ready-card-status-area.my-ready .ready-card-status {
-  display: block;
+  padding: 10px 20px;
+  border-radius: 24px;
   color: #0ea5e9;
   background: rgba(56, 189, 248, 0.2);
   border: 1px solid rgba(56, 189, 248, 0.4);
 }
 
-#ready-view .ready-card-status-area .ready-card-ready-btn {
+#ready-view .ready-card-me .ready-card-slot.my-ready .ready-card-status-text {
+  display: block;
+}
+
+#ready-view .ready-card-me .ready-card-slot .ready-card-ready-btn {
   display: inline-flex;
   width: 100%;
+  min-width: 140px;
   max-width: 200px;
   justify-content: center;
 }
 
-#ready-view .ready-card-status-area.my-ready .ready-card-ready-btn {
-  display: none;
+#ready-view .ready-card-me .ready-card-slot.my-ready .ready-card-ready-btn {
+  display: none !important;
 }
 
-#ready-view .ready-card-me .ready-card-button {
+#ready-view .ready-card-me .ready-card-cancel-btn {
   width: 100%;
-  max-width: 220px;
-  margin-top: 4px;
+  margin-top: 12px;
+  margin-bottom: 0;
 }
 
-#ready-view .ready-card-status {
+/* 相手カード：準備状態テキストのみ */
+#ready-view .ready-card-opponent .ready-card-status-text {
   margin: 0;
   font-size: 15px;
   padding: 8px 16px;
   border-radius: 20px;
   font-weight: 500;
-}
-
-#ready-view .ready-card-status {
   color: #94a3b8;
   background: rgba(15, 23, 42, 0.6);
 }
 
-#ready-view .ready-card-opponent .ready-card-status:not([data-ready="true"]) {
+#ready-view .ready-card-opponent .ready-card-status-text:not([data-ready="true"]) {
   color: #64748b;
 }
 
-#ready-view .ready-card-opponent .ready-card-status[data-ready="true"] {
+#ready-view .ready-card-opponent .ready-card-status-text[data-ready="true"] {
   color: #ec4899;
   background: rgba(236, 72, 153, 0.15);
   border: 1px solid rgba(236, 72, 153, 0.3);
