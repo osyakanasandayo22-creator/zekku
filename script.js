@@ -113,6 +113,7 @@ onAuthStateChanged(auth, (user) => {
     profileMenuName.textContent = displayName;
 
     profileButton.hidden = false;
+    profileButton.style.display = "";
     loginButton.style.display = "none";
 
     // ハンドルネーム未設定なら、Firebase の表示名をデフォルトとして使う
@@ -784,9 +785,15 @@ if (logoutMenuButton) {
     try {
       await signOut(auth);
       if (profileMenu) profileMenu.hidden = true;
-      // ログアウト直後にUIを更新（onAuthStateChanged の前に表示を戻す）
-      if (profileButton) profileButton.hidden = true;
-      if (loginButton) loginButton.style.display = "";
+      // ログアウト直後にUIを更新（CSSの display 上書きを防ぐため属性＋style の両方で制御）
+      if (profileButton) {
+        profileButton.hidden = true;
+        profileButton.style.display = "none";
+      }
+      if (loginButton) {
+        loginButton.style.display = "";
+        loginButton.removeAttribute("hidden");
+      }
     } catch (e) {
       console.error(e);
       alert("ログアウトに失敗しました。");

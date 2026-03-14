@@ -139,6 +139,12 @@ body {
     linear-gradient(135deg, #020617, #020617);
 }
 
+/* [hidden] を確実に効かせる（display: inline-flex で上書きされないように） */
+.topbar-profile-button[hidden],
+.topbar-profile-menu[hidden] {
+  display: none !important;
+}
+
 .topbar-profile-icon {
   font-size: 10px;
   color: #9ca3af;
