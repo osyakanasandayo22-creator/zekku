@@ -67,7 +67,7 @@ let matchUnsubscribe = null;
 let timerIntervalId = null;
 let currentMode = "gogon-zekku";
 let battleReady = false;
-let hasSentReady = false;
+let currentMyReady = false; // 最新の自分の「準備OK」状態
 let isComposingPoem = false;
 
 // ===== ユーザー名の保存／読み込み =====
@@ -187,7 +187,6 @@ function showHome() {
   currentMatchId = null;
   currentIsPlayer1 = null;
   battleReady = false;
-  hasSentReady = false;
   if (readyButton) {
     readyButton.disabled = true;
     readyButton.textContent = "準備OK";
@@ -444,6 +443,7 @@ function listenMatch(matchId, isPlayer1) {
     // 準備画面用：自分・相手のカード（名前と準備OK状態）
     const myReady = isPlayer1 ? p1Ready : p2Ready;
     const opponentReady = isPlayer1 ? p2Ready : p1Ready;
+    currentMyReady = myReady;
     if (readyMyName) readyMyName.textContent = meName || "あなた";
     if (readyMyStatus) {
       readyMyStatus.textContent = myReady ? "準備OK" : "準備中";
@@ -451,6 +451,7 @@ function listenMatch(matchId, isPlayer1) {
     }
     if (readyMyStatusArea) {
       readyMyStatusArea.classList.toggle("my-ready", myReady);
+      // waiting 中は「待っています」表示、ongoing になったらボタン／状態表示に切り替え
       readyMyStatusArea.classList.toggle("slot-waiting", data.status === "waiting");
     }
     if (readyOpponentName) readyOpponentName.textContent = opponentLabel;
@@ -482,8 +483,8 @@ function listenMatch(matchId, isPlayer1) {
         poemSendButton.disabled = true;
         battleHelperText.textContent = "両者が準備OKを押すとバトル開始します。";
         if (readyButton) {
-          readyButton.disabled = hasSentReady;
-          readyButton.textContent = hasSentReady ? "準備OK済み" : "準備OK";
+          readyButton.disabled = false;
+          readyButton.textContent = myReady ? "準備解除" : "準備OK";
         }
       } else {
         // 両者が準備完了 → 対戦画面へ遷移
@@ -578,7 +579,6 @@ battleButton.addEventListener("click", async () => {
   battleHelperText.textContent = "対戦相手を探しています…";
   stopTimer();
   timerDisplay.textContent = "05:00";
-  hasSentReady = false;
   if (readyButton) {
     readyButton.disabled = true;
     readyButton.textContent = "準備OK";
@@ -668,21 +668,28 @@ if (readyCancelButton) {
 // 準備OKボタン
 if (readyButton) {
   readyButton.addEventListener("click", async () => {
-    if (!currentMatchId || currentIsPlayer1 === null || hasSentReady) return;
-    hasSentReady = true;
+    if (!currentMatchId || currentIsPlayer1 === null) return;
+
+    // 相手待ち（waiting）の間はボタンは動かさない想定だが、念のためガードしておく
+    if (readyStatusText && readyStatusText.textContent.includes("探しています")) {
+      return;
+    }
+
     readyButton.disabled = true;
-    readyButton.textContent = "準備OK済み";
 
     try {
       const matchRef = doc(db, "matches", currentMatchId);
       const field = currentIsPlayer1 ? "player1Ready" : "player2Ready";
-      await updateDoc(matchRef, { [field]: true });
+
+      // トグル動作：未準備なら true、準備済みなら false に戻す
+      const next = !currentMyReady;
+      await updateDoc(matchRef, { [field]: next });
     } catch (e) {
       console.error(e);
       alert("準備OKの送信に失敗しました。もう一度お試しください。");
-      hasSentReady = false;
+    } finally {
+      // 実際の状態・表示は onSnapshot 側で更新される
       readyButton.disabled = false;
-      readyButton.textContent = "準備OK";
     }
   });
 }
