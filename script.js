@@ -80,6 +80,18 @@ function saveUserName(name) {
 
 loadUserName();
 
+// ===== 部屋の「自分」識別用（自部屋に参加しないため） =====
+const CLIENT_ID_KEY = "battleClientId";
+
+function getOrCreateClientId() {
+  let id = localStorage.getItem(CLIENT_ID_KEY);
+  if (!id) {
+    id = crypto.randomUUID ? crypto.randomUUID() : `client-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(CLIENT_ID_KEY, id);
+  }
+  return id;
+}
+
 // ===== 入力中の自動整形（漢字のみ・4行×各5字に揃える） =====
 function formatPoemInput() {
   if (!poemInput) return;
@@ -334,42 +346,49 @@ function validateGogonZekku(poem) {
   return { ok: true, message: "" };
 }
 
-// ===== Firestore: マッチング処理 =====
+// ===== Firestore: 部屋ベースのマッチング =====
+// 部屋は最大2人。作成者を clientId で識別し、自分が作った部屋には参加しない。
 async function findOrCreateMatch(userName) {
   const matchesRef = collection(db, "matches");
+  const myClientId = getOrCreateClientId();
 
-  // 1. 「今」待機している相手を探す（古い待機は無視して新規バトル扱い）
+  // 1. 待機中の「他者の部屋」を探す（自分の部屋は除外・2人目として参加）
   const waitingQuery = query(matchesRef, where("status", "==", "waiting"));
   const waitingSnap = await getDocs(waitingQuery);
 
-  if (!waitingSnap.empty) {
-    const nowMs = Date.now();
-    const MAX_WAIT_MS = 60 * 1000; // 60秒より古い待機は無効とみなす
+  const nowMs = Date.now();
+  const MAX_WAIT_MS = 60 * 1000; // 60秒より古い待機部屋はキャンセル扱い
 
+  if (!waitingSnap.empty) {
     for (const d of waitingSnap.docs) {
       const data = d.data();
-      const createdAt = data.createdAt;
 
-      // createdAt が無い／変な場合はスキップ
+      // 自分が作った部屋には絶対に入らない（戻って再マッチで自対戦を防ぐ）
+      if (data.ownerClientId === myClientId) {
+        continue;
+      }
+
+      const createdAt = data.createdAt;
       if (!createdAt || typeof createdAt.toMillis !== "function") {
         continue;
       }
 
       const createdMs = createdAt.toMillis();
       if (nowMs - createdMs > MAX_WAIT_MS) {
-        // 古い待機は finished にしてスキップ（ゴースト対戦の原因になるため）
+        // 古い待機部屋はキャンセルにして、次の部屋を探す
         const staleRef = doc(db, "matches", d.id);
-        updateDoc(staleRef, { status: "finished", finishedAt: serverTimestamp() }).catch(
+        updateDoc(staleRef, { status: "cancelled", cancelledAt: serverTimestamp() }).catch(
           () => {}
         );
         continue;
       }
 
-      // 有効な待機相手が見つかった → そのバトルに参加
+      // 有効な他者の部屋に2人目として参加（1部屋に2人まで）
       const matchRef = doc(db, "matches", d.id);
       await updateDoc(matchRef, {
         status: "ongoing",
         player2Name: userName,
+        player2ClientId: myClientId,
         matchedAt: serverTimestamp()
       });
 
@@ -377,9 +396,10 @@ async function findOrCreateMatch(userName) {
     }
   }
 
-  // 2. 誰もいない → 自分が先に待つ
+  // 2. 入れる部屋がなければ自分が部屋を作る（1人目）
   const newMatch = await addDoc(matchesRef, {
     status: "waiting",
+    ownerClientId: myClientId,
     player1Name: userName,
     player2Name: null,
     player1Poem: null,
@@ -480,6 +500,16 @@ function listenMatch(matchId, isPlayer1) {
           }
         }
       }
+    } else if (data.status === "cancelled") {
+      if (readyStatusText) readyStatusText.textContent = "相手が退出しました。ホームに戻ってください。";
+      battleReady = false;
+      stopTimer();
+      poemInput.disabled = true;
+      poemSendButton.disabled = true;
+      if (readyButton) {
+        readyButton.disabled = true;
+        readyButton.textContent = "準備OK";
+      }
     } else if (data.status === "finished") {
       if (readyStatusText) readyStatusText.textContent = "バトル終了";
     }
@@ -495,10 +525,9 @@ function listenMatch(matchId, isPlayer1) {
       opponentPoemDisplay.textContent = opponentPoem;
     }
 
-    // 両方の作品が揃ったら鑑賞画面へ
-    if (myPoem && opponentPoem && data.status !== "finished") {
+    // 両方の作品が揃ったら鑑賞画面へ（試合終了時のみ finished）
+    if (myPoem && opponentPoem && data.status === "ongoing") {
       showResult();
-      // ついでにステータスを finished にしておく
       updateDoc(matchRef, { status: "finished", finishedAt: serverTimestamp() }).catch(
         () => {}
       );
@@ -609,13 +638,13 @@ backToHomeButton.addEventListener("click", () => {
   showHome();
 });
 
-// 準備画面で「マッチングをやめる」
+// 準備画面で「マッチングをやめる」（部屋から退出・状態は cancelled で保存）
 if (readyCancelButton) {
   readyCancelButton.addEventListener("click", async () => {
     if (currentMatchId) {
       try {
         const matchRef = doc(db, "matches", currentMatchId);
-        await updateDoc(matchRef, { status: "finished", finishedAt: serverTimestamp() });
+        await updateDoc(matchRef, { status: "cancelled", cancelledAt: serverTimestamp() });
       } catch (e) {
         console.error(e);
       }
