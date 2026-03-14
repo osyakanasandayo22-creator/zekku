@@ -143,8 +143,51 @@
                 <button id="battle-button" class="primary-button battle-button">
                   バトる
                 </button>
+                <button id="charge-button" type="button" class="secondary-button charge-button">
+                  課金
+                </button>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- 課金画面：画数資産の購入 -->
+        <section class="panel panel-charge" id="charge-view">
+          <div class="panel-header">
+            <h2>画数資産を購入</h2>
+            <p class="charge-description">値段に応じた画数資産を入手できます。</p>
+          </div>
+          <div class="charge-packages">
+            <div class="charge-package" data-strokes="100" data-price="100">
+              <span class="charge-package-strokes">100</span>
+              <span class="charge-package-unit">画数資産</span>
+              <span class="charge-package-price">¥100</span>
+              <button type="button" class="charge-package-buy">購入</button>
+            </div>
+            <div class="charge-package" data-strokes="500" data-price="400">
+              <span class="charge-package-badge">お得</span>
+              <span class="charge-package-strokes">500</span>
+              <span class="charge-package-unit">画数資産</span>
+              <span class="charge-package-price">¥400</span>
+              <button type="button" class="charge-package-buy">購入</button>
+            </div>
+            <div class="charge-package charge-package-popular" data-strokes="1200" data-price="1000">
+              <span class="charge-package-badge">人気</span>
+              <span class="charge-package-strokes">1,200</span>
+              <span class="charge-package-unit">画数資産</span>
+              <span class="charge-package-price">¥1,000</span>
+              <button type="button" class="charge-package-buy">購入</button>
+            </div>
+            <div class="charge-package" data-strokes="3000" data-price="2000">
+              <span class="charge-package-badge">最大30%OFF</span>
+              <span class="charge-package-strokes">3,000</span>
+              <span class="charge-package-unit">画数資産</span>
+              <span class="charge-package-price">¥2,000</span>
+              <button type="button" class="charge-package-buy">購入</button>
+            </div>
+          </div>
+          <div class="charge-back-wrap">
+            <button id="charge-back-button" type="button" class="secondary-button">ホームに戻る</button>
           </div>
         </section>
 

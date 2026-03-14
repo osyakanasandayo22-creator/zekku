@@ -43,6 +43,7 @@ const modeSelectMenu = document.getElementById("mode-select-menu");
 const modeSelectedLabel = document.getElementById("mode-selected-label");
 
 const homeView = document.getElementById("home-view");
+const chargeView = document.getElementById("charge-view");
 const readyView = document.getElementById("ready-view");
 const battleView = document.getElementById("battle-view");
 const resultView = document.getElementById("result-view");
@@ -244,6 +245,7 @@ if (poemInput) {
 // ===== 画面切り替えヘルパー =====
 function showHome() {
   homeView.style.display = "block";
+  chargeView.style.display = "none";
   readyView.style.display = "none";
   battleView.style.display = "none";
   resultView.style.display = "none";
@@ -268,8 +270,21 @@ function showHome() {
     "5分以内に送信してください。送信後は内容を編集できません。";
 }
 
+function showChargeView() {
+  homeView.style.display = "none";
+  chargeView.style.display = "flex";
+  readyView.style.display = "none";
+  battleView.style.display = "none";
+  resultView.style.display = "none";
+
+  readyView.classList.remove("active");
+  battleView.classList.remove("active");
+  resultView.classList.remove("active");
+}
+
 function showReadyView() {
   homeView.style.display = "none";
+  chargeView.style.display = "none";
   readyView.style.display = "block";
   battleView.style.display = "none";
   resultView.style.display = "none";
@@ -281,6 +296,7 @@ function showReadyView() {
 
 function showBattle() {
   homeView.style.display = "none";
+  chargeView.style.display = "none";
   readyView.style.display = "none";
   battleView.style.display = "block";
   resultView.style.display = "none";
@@ -293,6 +309,7 @@ function showBattle() {
 
 function showResult() {
   homeView.style.display = "none";
+  chargeView.style.display = "none";
   battleView.style.display = "none";
   resultView.style.display = "block";
 
@@ -747,6 +764,35 @@ poemSendButton.addEventListener("click", async () => {
 
 backToHomeButton.addEventListener("click", () => {
   showHome();
+});
+
+// 課金ボタン → 課金画面へ
+const chargeButton = document.getElementById("charge-button");
+if (chargeButton) {
+  chargeButton.addEventListener("click", () => {
+    showChargeView();
+  });
+}
+
+// 課金画面：ホームに戻る
+const chargeBackButton = document.getElementById("charge-back-button");
+if (chargeBackButton) {
+  chargeBackButton.addEventListener("click", () => {
+    showHome();
+  });
+}
+
+// 課金画面：パッケージ購入（画数資産を加算）
+document.querySelectorAll(".charge-package-buy").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const packageEl = btn.closest(".charge-package");
+    if (!packageEl) return;
+    const strokes = parseInt(packageEl.getAttribute("data-strokes"), 10);
+    const price = packageEl.getAttribute("data-price");
+    if (Number.isNaN(strokes) || strokes <= 0) return;
+    setStrokeAsset(getStrokeAsset() + strokes);
+    alert(`${strokes}画数資産を入手しました。（¥${price}）\n現在の画数資産：${getStrokeAsset()}`);
+  });
 });
 
 // 準備画面で「マッチングをやめる」（部屋から退出・状態は cancelled で保存）
