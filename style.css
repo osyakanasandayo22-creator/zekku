@@ -844,14 +844,15 @@ body {
   padding: 0;
   font-size: 50px;   /* 画数セルと同じ */
   font-weight: 600;
-  line-height: 1;   /* 選択時に文字の下に余白が出ないようにする */
+  /* 行の幅を広げつつ、行末の空欄を出さない：5行で高さ460pxをぴったり埋める line-height */
+  line-height: 1.84;   /* 5 × 1.84 × 50px ≈ 460px（列幅は約92pxに） */
   letter-spacing: 0.84em;   /* 縦書きの行間を画数枠のセル高に合わせる */
-  overflow: hidden;   /* 下に出るスクロールバーを非表示 */
-  scrollbar-width: none;   /* Firefoxでスクロールバー非表示 */
-  -ms-overflow-style: none;   /* IE/Edgeでスクロールバー非表示 */
+  overflow: hidden;   /* 下に出るスクロールバー・はみ出しを非表示 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 #battle-view .poem-input-area textarea::-webkit-scrollbar {
-  display: none;   /* Chrome/Safariでスクロールバー非表示 */
+  display: none;
 }
 
 /* PC：画数表示枠を入力フォームと同じ大きさ（高さ揃え・対応感） */
