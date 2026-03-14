@@ -577,6 +577,8 @@ function listenMatch(matchId, isPlayer1) {
         }
         if (!battleReady) {
           battleReady = true;
+          // バトル開始時に入場料を画数資産から控除
+          setStrokeAsset(getStrokeAsset() - ENTRY_FEE);
           showBattle();
           poemInput.disabled = false;
           poemSendButton.disabled = false;
@@ -639,12 +641,6 @@ battleButton.addEventListener("click", async () => {
     return;
   }
 
-  // 入場料（画数資産10）チェック
-  if (getStrokeAsset() < ENTRY_FEE) {
-    alert(`バトルに参加するには画数資産が${ENTRY_FEE}以上必要です。（現在：${getStrokeAsset()}）`);
-    return;
-  }
-
   let name = (currentUserName || "").trim();
   if (!name) {
     // Firebase の表示名／メールアドレスをデフォルトとして使う
@@ -690,9 +686,6 @@ battleButton.addEventListener("click", async () => {
     const { matchId, isPlayer1 } = await findOrCreateMatch(currentUserName);
     currentMatchId = matchId;
     currentIsPlayer1 = isPlayer1;
-
-    // 入場料を画数資産から控除
-    setStrokeAsset(getStrokeAsset() - ENTRY_FEE);
 
     listenMatch(matchId, isPlayer1);
   } catch (e) {
