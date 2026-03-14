@@ -13,6 +13,13 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { STROKE_COUNT } from "./stroke-data.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // ===== Firebase 設定 =====
 const firebaseConfig = {
@@ -27,6 +34,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 // ===== DOM 取得 =====
 const battleButton = document.getElementById("battle-button");
@@ -58,9 +66,14 @@ const myPoemDisplay = document.getElementById("my-poem-display");
 const opponentPoemDisplay = document.getElementById("opponent-poem-display");
 const backToHomeButton = document.getElementById("back-to-home-button");
 const strokeGrid = document.getElementById("stroke-grid");
+const loginButton = document.getElementById("login-button");
+const logoutButton = document.getElementById("logout-button");
+const userInfo = document.getElementById("user-info");
+const userNameLabel = document.getElementById("user-name");
 
 // ===== 状態 =====
 let currentUserName = "";
+let currentUser = null;
 let currentMatchId = null;
 let currentIsPlayer1 = null;
 let matchUnsubscribe = null;
@@ -81,6 +94,31 @@ function saveUserName(name) {
 }
 
 loadUserName();
+
+// ===== ログイン状態の監視（Firebase Authentication） =====
+const provider = new GoogleAuthProvider();
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user || null;
+
+  if (!loginButton || !logoutButton || !userInfo || !userNameLabel) return;
+
+  if (user) {
+    const displayName = user.displayName || user.email || "ゲスト";
+    userNameLabel.textContent = displayName;
+    userInfo.hidden = false;
+    loginButton.style.display = "none";
+
+    // ハンドルネーム未設定なら、Firebase の表示名をデフォルトとして使う
+    if (!currentUserName) {
+      currentUserName = displayName;
+      saveUserName(displayName);
+    }
+  } else {
+    userInfo.hidden = true;
+    loginButton.style.display = "";
+  }
+});
 
 // ===== 部屋の「自分」識別用（自部屋に参加しないため） =====
 const CLIENT_ID_KEY = "battleClientId";
@@ -552,9 +590,21 @@ function cleanupMatchListener() {
 
 // ===== イベント =====
 battleButton.addEventListener("click", async () => {
+  // ログイン必須
+  if (!auth.currentUser) {
+    alert("バトルを開始するには、右上の「ログイン」ボタンからログインしてください。");
+    return;
+  }
+
   let name = (currentUserName || "").trim();
   if (!name) {
-    const input = prompt("ハンドルネームを入力してください（例：李白、芭蕉 など）", "");
+    // Firebase の表示名／メールアドレスをデフォルトとして使う
+    const user = auth.currentUser;
+    const fallbackName = (user && (user.displayName || user.email)) || "";
+    const input = prompt(
+      "対戦で使うハンドルネームを入力してください（例：李白、芭蕉 など）",
+      fallbackName
+    );
     if (!input) {
       alert("ハンドルネームが必要です。");
       return;
@@ -690,6 +740,30 @@ if (readyButton) {
     } finally {
       // 実際の状態・表示は onSnapshot 側で更新される
       readyButton.disabled = false;
+    }
+  });
+}
+
+// ログインボタン
+if (loginButton) {
+  loginButton.addEventListener("click", async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      console.error(e);
+      alert("ログインに失敗しました。時間をおいて再度お試しください。");
+    }
+  });
+}
+
+// ログアウトボタン
+if (logoutButton) {
+  logoutButton.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error(e);
+      alert("ログアウトに失敗しました。");
     }
   });
 }
