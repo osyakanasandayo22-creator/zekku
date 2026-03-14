@@ -922,6 +922,7 @@ body {
   opacity: 0.7;
 }
 
+/* スマホ・タブレット向け */
 @media (max-width: 800px) {
   .app {
     margin: 16px 8px;
@@ -930,7 +931,38 @@ body {
   }
 
   .app-header {
-    padding: 16px 16px;
+    padding: 12px 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .app-header::after {
+    left: 12px;
+    right: 12px;
+  }
+
+  .topbar-logo img {
+    height: 32px;
+  }
+
+  .topbar-search {
+    margin-left: 0;
+    flex: 1 1 180px;
+    min-width: 0;
+    max-width: none;
+    gap: 6px;
+  }
+
+  .topbar-search-input {
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .topbar-search-button {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    font-size: 12px;
   }
 
   .app-main {
@@ -945,5 +977,113 @@ body {
 
   .poem-compare {
     grid-template-columns: 1fr;
+  }
+
+  /* 対戦画面：スマホで見やすく */
+  #battle-view {
+    padding: 12px 8px 20px;
+    min-height: calc(100vh - 120px);
+  }
+
+  #battle-view .battle-meta {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+  }
+
+  #battle-view .timer {
+    font-size: 12px;
+  }
+
+  #battle-view #timer-display {
+    font-size: 16px;
+  }
+
+  #battle-view .versus {
+    font-size: 12px;
+    padding: 6px 10px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #battle-view .poem-input-area {
+    margin-top: 16px;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #battle-view .poem-input-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  #battle-view .poem-input-left {
+    width: 100%;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  #battle-view .poem-input-area textarea {
+    width: 160px;
+    min-height: 260px;
+    font-size: 18px;
+    letter-spacing: 0.12em;
+  }
+
+  #battle-view .poem-input-right {
+    width: 100%;
+    align-items: center;
+  }
+
+  #battle-view .stroke-grid {
+    width: 140px;
+    padding: 8px;
+    gap: 3px;
+  }
+
+  #battle-view .stroke-grid-cell {
+    font-size: 12px;
+  }
+
+  #battle-view .stroke-grid-label {
+    font-size: 11px;
+  }
+
+  #battle-view .poem-input-left .secondary-button,
+  #battle-view .poem-input-left .primary-button {
+    min-height: 44px;
+    width: 100%;
+    max-width: 280px;
+    padding: 12px 16px;
+  }
+}
+
+/* ごく狭い画面（検索を縦並びにしてはみ出し防止） */
+@media (max-width: 400px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .topbar-logo {
+    justify-content: center;
+  }
+
+  .topbar-search {
+    flex: 1 1 auto;
+    flex-direction: row;
+    min-width: 0;
+  }
+
+  .topbar-search-input {
+    flex: 1;
+    min-width: 0;
   }
 }
