@@ -12,6 +12,7 @@ import {
   onSnapshot,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { STROKE_COUNT } from "./stroke-data.js";
 
 // ===== Firebase 設定 =====
 const firebaseConfig = {
@@ -49,6 +50,7 @@ const readyButton = document.getElementById("ready-button");
 const myPoemDisplay = document.getElementById("my-poem-display");
 const opponentPoemDisplay = document.getElementById("opponent-poem-display");
 const backToHomeButton = document.getElementById("back-to-home-button");
+const strokeGrid = document.getElementById("stroke-grid");
 
 // ===== 状態 =====
 let currentUserName = "";
@@ -97,6 +99,39 @@ function formatPoemInput() {
   }
 }
 
+// ===== 画数グリッド更新（入力フォームの1〜20字目に対応・縦5×横4） =====
+function getPoemCharsInOrder() {
+  if (!poemInput) return [];
+  const raw = poemInput.value.replace(/[^\u4E00-\u9FFF]/g, "");
+  return raw.split("").slice(0, 20);
+}
+
+function updateStrokeGrid() {
+  if (!strokeGrid) return;
+  const cells = strokeGrid.querySelectorAll(".stroke-grid-cell");
+  const chars = getPoemCharsInOrder();
+  for (let i = 0; i < 20; i += 1) {
+    const cell = cells[i];
+    if (!cell) continue;
+    const char = chars[i];
+    if (!char) {
+      cell.textContent = "";
+      cell.classList.remove("filled");
+      continue;
+    }
+    const count = STROKE_COUNT[char];
+    if (count !== undefined) {
+      cell.textContent = count;
+      cell.classList.add("filled");
+      cell.title = `${char}：${count}画`;
+    } else {
+      cell.textContent = "?";
+      cell.classList.add("filled", "unknown");
+      cell.title = `${char}：画数未登録`;
+    }
+  }
+}
+
 if (poemInput) {
   poemInput.addEventListener("compositionstart", () => {
     isComposingPoem = true;
@@ -104,10 +139,12 @@ if (poemInput) {
   poemInput.addEventListener("compositionend", () => {
     isComposingPoem = false;
     formatPoemInput();
+    updateStrokeGrid();
   });
   poemInput.addEventListener("input", () => {
     if (isComposingPoem) return;
     formatPoemInput();
+    updateStrokeGrid();
   });
 }
 
@@ -144,6 +181,7 @@ function showBattle() {
 
   battleView.classList.add("active");
   resultView.classList.remove("active");
+  updateStrokeGrid();
 }
 
 function showResult() {

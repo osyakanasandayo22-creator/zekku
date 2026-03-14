@@ -718,6 +718,76 @@ body {
   gap: 8px;
 }
 
+.poem-input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.poem-input-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.poem-input-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.stroke-grid-label {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.stroke-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 4px;
+  width: min(160px, 20vw);
+  aspect-ratio: 4 / 5;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.stroke-grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 6px;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.stroke-grid-cell.filled {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.stroke-grid-cell.filled.unknown {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
 .poem-input-area label {
   font-size: 13px;
   color: #e5e7eb;
@@ -753,6 +823,10 @@ body {
   align-items: center;
   margin-top: 40px;
   gap: 16px;
+}
+
+#battle-view .poem-input-row {
+  align-items: center;
 }
 
 #battle-view .poem-input-area textarea {
