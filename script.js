@@ -449,7 +449,10 @@ function listenMatch(matchId, isPlayer1) {
       readyMyStatus.textContent = myReady ? "準備OK" : "準備中";
       readyMyStatus.setAttribute("data-ready", myReady ? "true" : "false");
     }
-    if (readyMyStatusArea) readyMyStatusArea.classList.toggle("my-ready", myReady);
+    if (readyMyStatusArea) {
+      readyMyStatusArea.classList.toggle("my-ready", myReady);
+      readyMyStatusArea.classList.toggle("slot-waiting", data.status === "waiting");
+    }
     if (readyOpponentName) readyOpponentName.textContent = opponentLabel;
     if (readyOpponentStatus) {
       readyOpponentStatus.textContent = opponentReady ? "準備OK" : "準備中";

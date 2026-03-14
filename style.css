@@ -508,16 +508,43 @@ body {
   color: #e2e8f0;
 }
 
-/* 自分のカード内：「準備中」の位置 = 1つのスロット（ボタン or テキスト） */
-#ready-view .ready-card-me .ready-card-slot {
+/* 自分のカード内：スロットとキャンセルボタンの幅を揃える */
+#ready-view .ready-card-me .ready-card-slot,
+#ready-view .ready-card-me .ready-card-cancel-btn {
   width: 100%;
-  min-height: 52px;
+  box-sizing: border-box;
+}
+
+#ready-view .ready-card-me .ready-card-slot {
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 4px 0;
 }
 
+/* 相手待ち：「待っています」表示（押せない雰囲気） */
+#ready-view .ready-card-me .ready-card-waiting-text {
+  display: none;
+  margin: 0;
+  font-size: 15px;
+  color: #64748b;
+  padding: 10px 20px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(100, 116, 139, 0.5);
+}
+
+#ready-view .ready-card-me .ready-card-slot.slot-waiting .ready-card-waiting-text {
+  display: inline-block;
+}
+
+#ready-view .ready-card-me .ready-card-slot.slot-waiting .ready-card-ready-btn,
+#ready-view .ready-card-me .ready-card-slot.slot-waiting .ready-card-status-text {
+  display: none !important;
+}
+
+/* 準備OK済み：テキスト表示 */
 #ready-view .ready-card-me .ready-card-slot .ready-card-status-text {
   display: none;
   margin: 0;
@@ -534,12 +561,16 @@ body {
   display: block;
 }
 
+/* 準備OKボタン：相手が揃ったら表示・スロットと同じ幅 */
 #ready-view .ready-card-me .ready-card-slot .ready-card-ready-btn {
-  display: inline-flex;
+  display: none;
   width: 100%;
-  min-width: 140px;
-  max-width: 200px;
   justify-content: center;
+  box-sizing: border-box;
+}
+
+#ready-view .ready-card-me .ready-card-slot:not(.slot-waiting):not(.my-ready) .ready-card-ready-btn {
+  display: inline-flex;
 }
 
 #ready-view .ready-card-me .ready-card-slot.my-ready .ready-card-ready-btn {
@@ -547,7 +578,6 @@ body {
 }
 
 #ready-view .ready-card-me .ready-card-cancel-btn {
-  width: 100%;
   margin-top: 12px;
   margin-bottom: 0;
 }
