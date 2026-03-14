@@ -784,6 +784,9 @@ if (logoutMenuButton) {
     try {
       await signOut(auth);
       if (profileMenu) profileMenu.hidden = true;
+      // ログアウト直後にUIを更新（onAuthStateChanged の前に表示を戻す）
+      if (profileButton) profileButton.hidden = true;
+      if (loginButton) loginButton.style.display = "";
     } catch (e) {
       console.error(e);
       alert("ログアウトに失敗しました。");
