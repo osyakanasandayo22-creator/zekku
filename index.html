@@ -113,12 +113,17 @@
             <h2>対戦準備</h2>
             <p class="ready-status-text" id="ready-status-text">対戦相手を探しています…</p>
           </div>
-          <div class="ready-versus" id="ready-versus-display">
-            あなた vs ？？？
-          </div>
-          <div class="ready-states">
-            <p class="ready-state-line" id="my-ready-state">あなた: 準備中</p>
-            <p class="ready-state-line" id="opponent-ready-state">相手: 準備中</p>
+          <div class="ready-cards">
+            <div class="ready-card ready-card-me">
+              <p class="ready-card-label">自分</p>
+              <p class="ready-card-name" id="ready-my-name">あなた</p>
+              <p class="ready-card-status" id="ready-my-status">準備中</p>
+            </div>
+            <div class="ready-card ready-card-opponent">
+              <p class="ready-card-label">相手</p>
+              <p class="ready-card-name" id="ready-opponent-name">？？？</p>
+              <p class="ready-card-status" id="ready-opponent-status">準備中</p>
+            </div>
           </div>
           <div class="ready-action">
             <button id="ready-button" class="primary-button">

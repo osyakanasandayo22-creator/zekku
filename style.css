@@ -449,35 +449,94 @@ body {
   display: none;
 }
 
-#ready-view .ready-versus {
+#ready-view .ready-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 520px;
+}
+
+#ready-view .ready-card {
+  flex: 1;
+  min-width: 200px;
+  max-width: 240px;
+  padding: 20px 24px;
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#ready-view .ready-card-me {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+}
+
+#ready-view .ready-card-opponent {
+  border-color: rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
+}
+
+#ready-view .ready-card-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+#ready-view .ready-card-me .ready-card-label {
+  color: #38bdf8;
+}
+
+#ready-view .ready-card-opponent .ready-card-label {
+  color: #f472b6;
+}
+
+#ready-view .ready-card-name {
+  margin: 0;
   font-size: 18px;
   font-weight: 600;
   color: #e2e8f0;
-  padding: 12px 20px;
-  background: rgba(15, 23, 42, 0.6);
-  border-radius: 12px;
-  border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
-#ready-view .ready-states {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  max-width: 320px;
-}
-
-#ready-view .ready-state-line {
+#ready-view .ready-card-status {
   margin: 0;
   font-size: 14px;
-  color: #94a3b8;
-  padding: 8px 12px;
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 500;
 }
 
-#ready-view .ready-state-line:first-of-type {
-  color: #38bdf8;
+#ready-view .ready-card-status {
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+#ready-view .ready-card-me .ready-card-status:not([data-ready="true"]) {
+  color: #64748b;
+}
+
+#ready-view .ready-card-me .ready-card-status[data-ready="true"] {
+  color: #0ea5e9;
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+#ready-view .ready-card-opponent .ready-card-status:not([data-ready="true"]) {
+  color: #64748b;
+}
+
+#ready-view .ready-card-opponent .ready-card-status[data-ready="true"] {
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.3);
 }
 
 #ready-view .ready-action {

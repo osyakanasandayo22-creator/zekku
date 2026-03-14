@@ -40,9 +40,10 @@ const battleView = document.getElementById("battle-view");
 const resultView = document.getElementById("result-view");
 
 const readyStatusText = document.getElementById("ready-status-text");
-const readyVersusDisplay = document.getElementById("ready-versus-display");
-const myReadyState = document.getElementById("my-ready-state");
-const opponentReadyState = document.getElementById("opponent-ready-state");
+const readyMyName = document.getElementById("ready-my-name");
+const readyMyStatus = document.getElementById("ready-my-status");
+const readyOpponentName = document.getElementById("ready-opponent-name");
+const readyOpponentStatus = document.getElementById("ready-opponent-status");
 const timerDisplay = document.getElementById("timer-display");
 const versusDisplay = document.getElementById("versus-display");
 
@@ -432,7 +433,6 @@ function listenMatch(matchId, isPlayer1) {
     const opponentLabel = otherName || "？？？";
     const vsText = `${meName || "あなた"} vs ${opponentLabel}`;
     if (versusDisplay) versusDisplay.textContent = vsText;
-    if (readyVersusDisplay) readyVersusDisplay.textContent = vsText;
 
     // 準備状態
     const p1Ready = !!data.player1Ready;
@@ -440,16 +440,18 @@ function listenMatch(matchId, isPlayer1) {
     const bothReady = p1Ready && p2Ready;
     const alreadyStarted = !!data.battleStarted;
 
-    // 準備画面用：自分・相手の準備状態表示
-    if (myReadyState) {
-      myReadyState.textContent = isPlayer1
-        ? `あなた: ${p1Ready ? "準備OK済み" : "準備中"}`
-        : `あなた: ${p2Ready ? "準備OK済み" : "準備中"}`;
+    // 準備画面用：自分・相手のカード（名前と準備OK状態）
+    const myReady = isPlayer1 ? p1Ready : p2Ready;
+    const opponentReady = isPlayer1 ? p2Ready : p1Ready;
+    if (readyMyName) readyMyName.textContent = meName || "あなた";
+    if (readyMyStatus) {
+      readyMyStatus.textContent = myReady ? "準備OK" : "準備中";
+      readyMyStatus.setAttribute("data-ready", myReady ? "true" : "false");
     }
-    if (opponentReadyState) {
-      opponentReadyState.textContent = isPlayer1
-        ? `相手: ${p2Ready ? "準備OK済み" : "準備中"}`
-        : `相手: ${p1Ready ? "準備OK済み" : "準備中"}`;
+    if (readyOpponentName) readyOpponentName.textContent = opponentLabel;
+    if (readyOpponentStatus) {
+      readyOpponentStatus.textContent = opponentReady ? "準備OK" : "準備中";
+      readyOpponentStatus.setAttribute("data-ready", opponentReady ? "true" : "false");
     }
 
     // ステータス文とUI制御（準備画面で表示）
