@@ -9,6 +9,7 @@ import {
   query,
   where,
   updateDoc,
+  setDoc,
   onSnapshot,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -80,16 +81,44 @@ const DEFAULT_STROKE_ASSET = 500;
 const ENTRY_FEE = 10;
 const STROKE_ASSET_KEY = "strokeAsset";
 
+/** ログイン中は Firestore の値をキャッシュ。未ログインは localStorage */
+let strokeAssetCache = null;
+
 function getStrokeAsset() {
+  if (auth.currentUser && strokeAssetCache !== null) return strokeAssetCache;
+  if (auth.currentUser) return DEFAULT_STROKE_ASSET;
   const saved = localStorage.getItem(STROKE_ASSET_KEY);
   if (saved === null || saved === "") return DEFAULT_STROKE_ASSET;
   const n = parseInt(saved, 10);
   return Number.isNaN(n) ? DEFAULT_STROKE_ASSET : n;
 }
 
+async function loadStrokeAssetFromFirestore() {
+  const user = auth.currentUser;
+  if (!user) {
+    strokeAssetCache = null;
+    return;
+  }
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  if (snap.exists() && typeof snap.data().strokeAsset === "number") {
+    strokeAssetCache = snap.data().strokeAsset;
+  } else {
+    strokeAssetCache = DEFAULT_STROKE_ASSET;
+    await setDoc(userRef, { strokeAsset: DEFAULT_STROKE_ASSET }, { merge: true });
+  }
+  updateStrokeAssetDisplay();
+}
+
 function setStrokeAsset(value) {
   const n = Math.max(0, Math.floor(value));
-  localStorage.setItem(STROKE_ASSET_KEY, String(n));
+  if (auth.currentUser) {
+    strokeAssetCache = n;
+    const userRef = doc(db, "users", auth.currentUser.uid);
+    updateDoc(userRef, { strokeAsset: n }).catch((e) => console.error("画数資産の保存に失敗しました", e));
+  } else {
+    localStorage.setItem(STROKE_ASSET_KEY, String(n));
+  }
   updateStrokeAssetDisplay();
 }
 
@@ -122,6 +151,24 @@ function saveUserName(name) {
 loadUserName();
 updateStrokeAssetDisplay();
 
+// ===== 決済完了後の戻り先で画数資産を反映 =====
+function handlePaymentReturn() {
+  const params = new URLSearchParams(location.search);
+  if (params.get("payment") === "success") {
+    if (auth.currentUser) {
+      loadStrokeAssetFromFirestore().then(() => {
+        updateStrokeAssetDisplay();
+        alert("決済が完了しました。画数資産を反映しました。");
+      });
+    } else {
+      alert("決済が完了しました。ログインすると画数資産が反映されます。");
+    }
+    history.replaceState(null, "", location.pathname + location.hash || "");
+  } else if (params.get("payment") === "cancelled") {
+    history.replaceState(null, "", location.pathname + location.hash || "");
+  }
+}
+
 // ===== ログイン状態の監視（Firebase Authentication） =====
 const provider = new GoogleAuthProvider();
 
@@ -146,7 +193,14 @@ onAuthStateChanged(auth, (user) => {
       currentUserName = displayName;
       saveUserName(displayName);
     }
+    // ログイン中は画数資産を Firestore から読み込み
+    loadStrokeAssetFromFirestore().then(() => {
+      updateStrokeAssetDisplay();
+      handlePaymentReturn();
+    });
   } else {
+    strokeAssetCache = null;
+    handlePaymentReturn();
     profileButton.hidden = true;
     profileMenu.hidden = true;
     loginButton.style.display = "";
@@ -782,16 +836,50 @@ if (chargeBackButton) {
   });
 }
 
-// 課金画面：パッケージ購入（画数資産を加算）
+// 課金画面：パッケージ購入（Stripe Checkout へリダイレクト）
+const CREATE_CHECKOUT_URL = `https://asia-northeast1-${firebaseConfig.projectId}.cloudfunctions.net/createCheckoutSession`;
+
 document.querySelectorAll(".charge-package-buy").forEach((btn) => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", async () => {
+    if (!auth.currentUser) {
+      alert("課金するにはログインしてください。");
+      return;
+    }
     const packageEl = btn.closest(".charge-package");
     if (!packageEl) return;
     const strokes = parseInt(packageEl.getAttribute("data-strokes"), 10);
-    const price = packageEl.getAttribute("data-price");
-    if (Number.isNaN(strokes) || strokes <= 0) return;
-    setStrokeAsset(getStrokeAsset() + strokes);
-    alert(`${strokes}画数資産を入手しました。（¥${price}）\n現在の画数資産：${getStrokeAsset()}`);
+    const priceYen = parseInt(packageEl.getAttribute("data-price"), 10);
+    if (Number.isNaN(strokes) || strokes <= 0 || Number.isNaN(priceYen) || priceYen <= 0) return;
+
+    btn.disabled = true;
+    btn.textContent = "処理中…";
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch(CREATE_CHECKOUT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({
+          data: {
+            strokes,
+            priceYen,
+            baseUrl: window.location.origin
+          }
+        })
+      });
+      const json = await res.json();
+      if (json.result && json.result.url) {
+        window.location.href = json.result.url;
+        return;
+      }
+      const errMsg = (json.error && json.error.message) || res.statusText || "決済の開始に失敗しました。しばらくしてからお試しください。";
+      alert(errMsg);
+    } catch (e) {
+      console.error(e);
+      alert("決済の開始に失敗しました。ネットワークを確認してください。");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "購入";
+    }
   });
 });
 
