@@ -842,10 +842,10 @@ body {
   min-height: 460px;
   width: 368px;   /* 画数枠と同じ幅で対応感を出す */
   padding: 0;
-  font-size: 26px;   /* 画数セルと同じ（読みやすいサイズ） */
+  font-size: 50px;   /* 画数セルと同じ */
   font-weight: 600;
-  line-height: 3.5;   /* 縦書きの列幅を画数枠のセル幅に合わせる */
-  letter-spacing: 2.8em;  /* 縦書きの行間を画数枠のセル高に合わせる */
+  line-height: 1.84;   /* 縦書きの列幅を画数枠のセル幅に合わせる */
+  letter-spacing: 0.84em;  /* 縦書きの行間を画数枠のセル高に合わせる */
 }
 
 /* PC：画数表示枠を入力フォームと同じ大きさ（高さ揃え・対応感） */
@@ -866,7 +866,7 @@ body {
 }
 
 #battle-view .stroke-grid-cell {
-  font-size: 26px;
+  font-size: 50px;
 }
 
 #battle-view .poem-input-area textarea::placeholder {
