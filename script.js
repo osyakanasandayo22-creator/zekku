@@ -35,10 +35,14 @@ const modeSelectMenu = document.getElementById("mode-select-menu");
 const modeSelectedLabel = document.getElementById("mode-selected-label");
 
 const homeView = document.getElementById("home-view");
+const readyView = document.getElementById("ready-view");
 const battleView = document.getElementById("battle-view");
 const resultView = document.getElementById("result-view");
 
-const battleStatusText = document.querySelector(".battle-status-text");
+const readyStatusText = document.getElementById("ready-status-text");
+const readyVersusDisplay = document.getElementById("ready-versus-display");
+const myReadyState = document.getElementById("my-ready-state");
+const opponentReadyState = document.getElementById("opponent-ready-state");
 const timerDisplay = document.getElementById("timer-display");
 const versusDisplay = document.getElementById("versus-display");
 
@@ -46,6 +50,7 @@ const poemInput = document.getElementById("poem-input");
 const poemSendButton = document.getElementById("poem-send-button");
 const battleHelperText = document.getElementById("battle-helper-text");
 const readyButton = document.getElementById("ready-button");
+const readyCancelButton = document.getElementById("ready-cancel-button");
 
 const myPoemDisplay = document.getElementById("my-poem-display");
 const opponentPoemDisplay = document.getElementById("opponent-poem-display");
@@ -155,9 +160,11 @@ if (poemInput) {
 // ===== 画面切り替えヘルパー =====
 function showHome() {
   homeView.style.display = "block";
+  readyView.style.display = "none";
   battleView.style.display = "none";
   resultView.style.display = "none";
 
+  readyView.classList.remove("active");
   battleView.classList.remove("active");
   resultView.classList.remove("active");
 
@@ -178,11 +185,24 @@ function showHome() {
     "5分以内に送信してください。送信後は内容を編集できません。";
 }
 
+function showReadyView() {
+  homeView.style.display = "none";
+  readyView.style.display = "block";
+  battleView.style.display = "none";
+  resultView.style.display = "none";
+
+  readyView.classList.add("active");
+  battleView.classList.remove("active");
+  resultView.classList.remove("active");
+}
+
 function showBattle() {
   homeView.style.display = "none";
+  readyView.style.display = "none";
   battleView.style.display = "block";
   resultView.style.display = "none";
 
+  readyView.classList.remove("active");
   battleView.classList.add("active");
   resultView.classList.remove("active");
   updateStrokeGrid();
@@ -386,11 +406,13 @@ function listenMatch(matchId, isPlayer1) {
 
     const data = snap.data();
 
-    // VS 表示
+    // VS 表示（準備画面・対戦画面の両方で使う）
     const meName = isPlayer1 ? data.player1Name : data.player2Name;
     const otherName = isPlayer1 ? data.player2Name : data.player1Name;
     const opponentLabel = otherName || "？？？";
-    versusDisplay.textContent = `${meName || "あなた"} vs ${opponentLabel}`;
+    const vsText = `${meName || "あなた"} vs ${opponentLabel}`;
+    if (versusDisplay) versusDisplay.textContent = vsText;
+    if (readyVersusDisplay) readyVersusDisplay.textContent = vsText;
 
     // 準備状態
     const p1Ready = !!data.player1Ready;
@@ -398,9 +420,21 @@ function listenMatch(matchId, isPlayer1) {
     const bothReady = p1Ready && p2Ready;
     const alreadyStarted = !!data.battleStarted;
 
-    // ステータス文とUI制御
+    // 準備画面用：自分・相手の準備状態表示
+    if (myReadyState) {
+      myReadyState.textContent = isPlayer1
+        ? `あなた: ${p1Ready ? "準備OK済み" : "準備中"}`
+        : `あなた: ${p2Ready ? "準備OK済み" : "準備中"}`;
+    }
+    if (opponentReadyState) {
+      opponentReadyState.textContent = isPlayer1
+        ? `相手: ${p2Ready ? "準備OK済み" : "準備中"}`
+        : `相手: ${p1Ready ? "準備OK済み" : "準備中"}`;
+    }
+
+    // ステータス文とUI制御（準備画面で表示）
     if (data.status === "waiting") {
-      battleStatusText.textContent = "対戦相手を探しています…";
+      if (readyStatusText) readyStatusText.textContent = "対戦相手を探しています…";
       battleReady = false;
       stopTimer();
       timerDisplay.textContent = "05:00";
@@ -413,7 +447,7 @@ function listenMatch(matchId, isPlayer1) {
       }
     } else if (data.status === "ongoing") {
       if (!bothReady) {
-        battleStatusText.textContent = "相手が揃いました。準備OKボタンを押してください。";
+        if (readyStatusText) readyStatusText.textContent = "相手が揃いました。準備OKを押してください。";
         battleReady = false;
         stopTimer();
         timerDisplay.textContent = "05:00";
@@ -425,8 +459,8 @@ function listenMatch(matchId, isPlayer1) {
           readyButton.textContent = hasSentReady ? "準備OK済み" : "準備OK";
         }
       } else {
-        // 両者が準備完了
-        battleStatusText.textContent = "五言絶句を詠みましょう。";
+        // 両者が準備完了 → 対戦画面へ遷移
+        if (readyStatusText) readyStatusText.textContent = "準備完了！";
         if (!alreadyStarted) {
           updateDoc(matchRef, { battleStarted: true, startedAt: serverTimestamp() }).catch(
             () => {}
@@ -434,6 +468,7 @@ function listenMatch(matchId, isPlayer1) {
         }
         if (!battleReady) {
           battleReady = true;
+          showBattle();
           poemInput.disabled = false;
           poemSendButton.disabled = false;
           battleHelperText.textContent =
@@ -441,12 +476,12 @@ function listenMatch(matchId, isPlayer1) {
           startTimer(5);
           if (readyButton) {
             readyButton.disabled = true;
-            readyButton.textContent = "バトル中";
+            readyButton.textContent = "準備OK";
           }
         }
       }
     } else if (data.status === "finished") {
-      battleStatusText.textContent = "バトル終了";
+      if (readyStatusText) readyStatusText.textContent = "バトル終了";
     }
 
     // 自分と相手の作品を反映
@@ -514,8 +549,8 @@ battleButton.addEventListener("click", async () => {
   }
 
   try {
-    showBattle();
-    battleStatusText.textContent = "対戦相手を探しています…";
+    showReadyView();
+    if (readyStatusText) readyStatusText.textContent = "対戦相手を探しています…";
 
     const { matchId, isPlayer1 } = await findOrCreateMatch(currentUserName);
     currentMatchId = matchId;
@@ -573,6 +608,26 @@ poemSendButton.addEventListener("click", async () => {
 backToHomeButton.addEventListener("click", () => {
   showHome();
 });
+
+// 準備画面で「マッチングをやめる」
+if (readyCancelButton) {
+  readyCancelButton.addEventListener("click", async () => {
+    if (currentMatchId) {
+      try {
+        const matchRef = doc(db, "matches", currentMatchId);
+        await updateDoc(matchRef, { status: "finished", finishedAt: serverTimestamp() });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    cleanupMatchListener();
+    currentMatchId = null;
+    currentIsPlayer1 = null;
+    showHome();
+    battleButton.disabled = false;
+    battleButton.textContent = "バトる";
+  });
+}
 
 // 準備OKボタン
 if (readyButton) {
