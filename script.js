@@ -41,11 +41,11 @@ const functions = getFunctions(app, "asia-northeast1");
 
 const homeView = document.getElementById("home-view");
 const composeView = document.getElementById("compose-view");
-const timelineView = document.getElementById("timeline-view");
 const marketView = document.getElementById("market-view");
 const chargeView = document.getElementById("charge-view");
 
-const navHomeButton = document.getElementById("nav-home-button");
+const navTimelineButton = document.getElementById("nav-timeline-button");
+const navComposeButton = document.getElementById("nav-compose-button");
 const navMarketButton = document.getElementById("nav-market-button");
 const chargeButton = document.getElementById("charge-button");
 const chargeBackButton = document.getElementById("charge-back-button");
@@ -58,6 +58,7 @@ const strokeGrid = document.getElementById("stroke-grid");
 const timelineStatusText = document.getElementById("timeline-status-text");
 const timelineList = document.getElementById("timeline-list");
 const marketList = document.getElementById("market-list");
+const marketPagination = document.getElementById("market-pagination");
 
 const loginButton = document.getElementById("login-button");
 const profileButton = document.getElementById("profile-button");
@@ -82,6 +83,8 @@ let marketStatsMap = new Map();
 let userHoldingsMap = new Map();
 let marketSearchTerm = "";
 let timelineSearchTerm = "";
+let marketPage = 1;
+const MARKET_PAGE_SIZE = 24;
 const localViewCounted = new Set();
 
 const applyPostUsage = httpsCallable(functions, "applyPostUsage");
@@ -131,38 +134,57 @@ function updateStrokeAssetDisplay() {
   if (strokeAssetValueEl) strokeAssetValueEl.textContent = getStrokeAsset().toLocaleString();
 }
 
-function showMainViews() {
+function setActiveTopbar(target) {
+  const items = [navTimelineButton, navComposeButton, navMarketButton, chargeButton];
+  for (const item of items) {
+    if (!item) continue;
+    item.classList.toggle("active", item === target);
+  }
+}
+
+function showTimelineView() {
   homeView.style.display = "block";
-  composeView.style.display = "block";
-  timelineView.style.display = "block";
+  composeView.style.display = "none";
   marketView.style.display = "none";
   chargeView.style.display = "none";
-  composeView.classList.add("active");
-  timelineView.classList.add("active");
+  homeView.classList.add("active");
+  composeView.classList.remove("active");
   marketView.classList.remove("active");
+  setActiveTopbar(navTimelineButton);
+}
+
+function showComposeView() {
+  homeView.style.display = "none";
+  composeView.style.display = "block";
+  marketView.style.display = "none";
+  chargeView.style.display = "none";
+  homeView.classList.remove("active");
+  composeView.classList.add("active");
+  marketView.classList.remove("active");
+  setActiveTopbar(navComposeButton);
 }
 
 function showMarketView() {
   homeView.style.display = "none";
   composeView.style.display = "none";
-  timelineView.style.display = "none";
   marketView.style.display = "block";
   chargeView.style.display = "none";
+  homeView.classList.remove("active");
   marketView.classList.add("active");
   composeView.classList.remove("active");
-  timelineView.classList.remove("active");
+  setActiveTopbar(navMarketButton);
   renderMarket();
 }
 
 function showChargeView() {
   homeView.style.display = "none";
   composeView.style.display = "none";
-  timelineView.style.display = "none";
   marketView.style.display = "none";
   chargeView.style.display = "flex";
+  homeView.classList.remove("active");
   marketView.classList.remove("active");
   composeView.classList.remove("active");
-  timelineView.classList.remove("active");
+  setActiveTopbar(chargeButton);
 }
 
 function formatPoemInput() {
@@ -385,7 +407,7 @@ function getBasePrice(strokes) {
 }
 
 function renderMarket() {
-  if (!marketList) return;
+  if (!marketList || !marketPagination) return;
   const entries = Object.entries(STROKE_COUNT).map(([char, strokeCount]) => {
     const stats = marketStatsMap.get(char) || {};
     const holdingQty = userHoldingsMap.get(char) || 0;
@@ -410,9 +432,14 @@ function renderMarket() {
     return bScore - aScore;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / MARKET_PAGE_SIZE));
+  marketPage = Math.min(marketPage, totalPages);
+  const start = (marketPage - 1) * MARKET_PAGE_SIZE;
+  const pageItems = filtered.slice(start, start + MARKET_PAGE_SIZE);
+
   marketList.innerHTML = "";
   const fragment = document.createDocumentFragment();
-  for (const item of filtered) {
+  for (const item of pageItems) {
     const card = document.createElement("article");
     card.className = "market-card";
     card.innerHTML = `
@@ -435,6 +462,46 @@ function renderMarket() {
     fragment.appendChild(card);
   }
   marketList.appendChild(fragment);
+  renderMarketPagination(totalPages);
+}
+
+function renderMarketPagination(totalPages) {
+  if (!marketPagination) return;
+  marketPagination.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+
+  const addPageButton = (page, label = String(page), isActive = false, isDisabled = false) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `page-button${isActive ? " active" : ""}`;
+    button.textContent = label;
+    button.disabled = isDisabled;
+    button.dataset.page = String(page);
+    fragment.appendChild(button);
+  };
+
+  const pages = [];
+  pages.push(1);
+  for (let p = marketPage - 1; p <= marketPage + 1; p += 1) {
+    if (p > 1 && p < totalPages) pages.push(p);
+  }
+  if (totalPages > 1) pages.push(totalPages);
+  const unique = [...new Set(pages)].sort((a, b) => a - b);
+
+  addPageButton(Math.max(1, marketPage - 1), "←", false, marketPage === 1);
+  let prev = 0;
+  for (const p of unique) {
+    if (prev !== 0 && p - prev > 1) {
+      const dots = document.createElement("span");
+      dots.className = "page-dots";
+      dots.textContent = "...";
+      fragment.appendChild(dots);
+    }
+    addPageButton(p, String(p), p === marketPage, false);
+    prev = p;
+  }
+  addPageButton(Math.min(totalPages, marketPage + 1), "→", false, marketPage === totalPages);
+  marketPagination.appendChild(fragment);
 }
 
 async function handleTrade(action, char) {
@@ -510,10 +577,11 @@ function attachEvents() {
   }
 
   poemSendButton?.addEventListener("click", submitPost);
-  navHomeButton?.addEventListener("click", showMainViews);
+  navTimelineButton?.addEventListener("click", showTimelineView);
+  navComposeButton?.addEventListener("click", showComposeView);
   navMarketButton?.addEventListener("click", showMarketView);
   chargeButton?.addEventListener("click", showChargeView);
-  chargeBackButton?.addEventListener("click", showMainViews);
+  chargeBackButton?.addEventListener("click", showComposeView);
 
   marketList?.addEventListener("click", (e) => {
     const buy = e.target.closest(".buy-btn");
@@ -526,11 +594,20 @@ function attachEvents() {
       handleTrade("sell", sell.getAttribute("data-char"));
     }
   });
+  marketPagination?.addEventListener("click", (e) => {
+    const button = e.target.closest(".page-button");
+    if (!button || button.disabled) return;
+    const next = parseInt(button.dataset.page || "", 10);
+    if (Number.isNaN(next)) return;
+    marketPage = next;
+    renderMarket();
+  });
 
   const runSearch = () => {
     const term = (searchInput?.value || "").trim();
     marketSearchTerm = term;
     timelineSearchTerm = term;
+    marketPage = 1;
     showMarketView();
   };
   searchButton?.addEventListener("click", runSearch);
@@ -632,7 +709,7 @@ onAuthStateChanged(auth, async (user) => {
   handlePaymentReturn();
 });
 
-showMainViews();
+showTimelineView();
 updateStrokeAssetDisplay();
 attachEvents();
 subscribeTimeline();
