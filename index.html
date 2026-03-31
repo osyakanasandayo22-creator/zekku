@@ -65,93 +65,83 @@
       </header>
 
       <main class="app-main">
-        <!-- ホーム：説明テキスト＋モード選択タグ＋バトるボタン -->
         <section class="home" id="home-view">
           <div class="home-center">
             <div class="home-copy">
-              <p class="copy-line">絶句でネット対戦。</p>
-              <p class="copy-line">絶句で賭ける。</p>
-              <p class="copy-line">絶句で投資する。</p>
+              <p class="copy-line">五言絶句を投稿して価値をつくる。</p>
+              <p class="copy-line">読む・書く・買うで画数資産が巡る。</p>
             </div>
+            <div class="home-action">
+              <button id="nav-home-button" class="primary-button battle-button">投稿</button>
+              <button id="nav-market-button" type="button" class="secondary-button">漢字ショップ</button>
+              <button id="charge-button" type="button" class="secondary-button charge-button">課金</button>
+            </div>
+          </div>
+        </section>
 
-            <div class="home-controls">
-              <div class="home-modes">
-                <div class="mode-select" id="mode-select">
-                  <button
-                    type="button"
-                    class="mode-select-trigger"
-                    id="mode-select-trigger"
-                    aria-haspopup="listbox"
-                    aria-expanded="false"
-                  >
-                    <span class="mode-selected-label" id="mode-selected-label">五言絶句</span>
-                    <span class="mode-select-arrow">▼</span>
-                  </button>
-                  <div class="mode-select-menu" id="mode-select-menu" role="listbox">
-                    <button
-                      class="mode-option"
-                      data-mode="gogon-zekku"
-                      data-label="五言絶句"
-                      data-tag="デフォルト"
-                      role="option"
-                      aria-selected="true"
-                    >
-                      <span class="mode-label">五言絶句</span>
-                      <span class="mode-tag">デフォルト</span>
-                    </button>
-                    <button
-                      class="mode-option disabled"
-                      data-mode="gogon-risshi"
-                      data-label="五言律詩"
-                      data-tag="準備中"
-                      role="option"
-                      aria-disabled="true"
-                      disabled
-                    >
-                      <span class="mode-label">五言律詩</span>
-                      <span class="mode-tag">準備中</span>
-                    </button>
-                    <button
-                      class="mode-option disabled"
-                      data-mode="shichigon-zekku"
-                      data-label="七言絶句"
-                      data-tag="準備中"
-                      role="option"
-                      aria-disabled="true"
-                      disabled
-                    >
-                      <span class="mode-label">七言絶句</span>
-                      <span class="mode-tag">準備中</span>
-                    </button>
-                    <button
-                      class="mode-option disabled"
-                      data-mode="shichigon-risshi"
-                      data-label="七言律詩"
-                      data-tag="準備中"
-                      role="option"
-                      aria-disabled="true"
-                      disabled
-                    >
-                      <span class="mode-label">七言律詩</span>
-                      <span class="mode-tag">準備中</span>
-                    </button>
-                  </div>
-                </div>
+        <section class="panel panel-secondary active" id="compose-view">
+          <div class="panel-header compact">
+            <h2>投稿</h2>
+          </div>
+          <div class="poem-input-area">
+            <div class="poem-input-row">
+              <div class="poem-input-left">
+                <label for="poem-input">あなたの五言絶句（漢字のみ・4行×各5字）</label>
+                <textarea
+                  id="poem-input"
+                  rows="5"
+                  placeholder="五言絶句を入力"
+                ></textarea>
+                <button id="poem-send-button" class="primary-button full">作品を投稿する</button>
+                <p class="helper-text" id="battle-helper-text">
+                  投稿コストは固定費 + 作品画数です。（漢字のみ・4行×各5字）
+                </p>
               </div>
-
-              <div class="home-action">
-                <button id="battle-button" class="primary-button battle-button">
-                  バトる
-                </button>
-                <button id="charge-button" type="button" class="secondary-button charge-button">
-                  課金
-                </button>
+              <div class="poem-input-right">
+                <p class="stroke-grid-label">画数（縦5×横4）</p>
+                <div class="stroke-grid" id="stroke-grid" aria-label="入力中の各文字の画数">
+                  <div class="stroke-grid-cell" data-index="0"></div>
+                  <div class="stroke-grid-cell" data-index="1"></div>
+                  <div class="stroke-grid-cell" data-index="2"></div>
+                  <div class="stroke-grid-cell" data-index="3"></div>
+                  <div class="stroke-grid-cell" data-index="4"></div>
+                  <div class="stroke-grid-cell" data-index="5"></div>
+                  <div class="stroke-grid-cell" data-index="6"></div>
+                  <div class="stroke-grid-cell" data-index="7"></div>
+                  <div class="stroke-grid-cell" data-index="8"></div>
+                  <div class="stroke-grid-cell" data-index="9"></div>
+                  <div class="stroke-grid-cell" data-index="10"></div>
+                  <div class="stroke-grid-cell" data-index="11"></div>
+                  <div class="stroke-grid-cell" data-index="12"></div>
+                  <div class="stroke-grid-cell" data-index="13"></div>
+                  <div class="stroke-grid-cell" data-index="14"></div>
+                  <div class="stroke-grid-cell" data-index="15"></div>
+                  <div class="stroke-grid-cell" data-index="16"></div>
+                  <div class="stroke-grid-cell" data-index="17"></div>
+                  <div class="stroke-grid-cell" data-index="18"></div>
+                  <div class="stroke-grid-cell" data-index="19"></div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- 課金画面：画数資産の購入 -->
+        <section class="panel panel-tertiary active" id="timeline-view">
+          <div class="panel-header compact">
+            <h2>タイムライン</h2>
+            <p id="timeline-status-text">新着投稿を読み込み中...</p>
+          </div>
+          <div id="timeline-list" class="timeline-list"></div>
+        </section>
+
+        <section class="panel panel-secondary" id="market-view">
+          <div class="panel-header compact">
+            <h2>漢字ショップ</h2>
+            <p>価値・価格はすべて画数資産で表示されます。</p>
+          </div>
+          <div id="market-list" class="market-list"></div>
+        </section>
+
         <section class="panel panel-charge" id="charge-view">
           <div class="panel-header">
             <h2>画数資産を購入</h2>
@@ -187,120 +177,7 @@
             </div>
           </div>
           <div class="charge-back-wrap">
-            <button id="charge-back-button" type="button" class="secondary-button">ホームに戻る</button>
-          </div>
-        </section>
-
-        <!-- 準備OK画面（マッチング＆両者OKで対戦開始） -->
-        <section class="panel panel-secondary" id="ready-view">
-          <div class="panel-header compact">
-            <h2>対戦準備</h2>
-            <p class="ready-status-text" id="ready-status-text">対戦相手を探しています…</p>
-          </div>
-          <div class="ready-cards">
-            <div class="ready-card ready-card-me">
-              <p class="ready-card-label">自分</p>
-              <p class="ready-card-name" id="ready-my-name">あなた</p>
-              <div class="ready-card-slot slot-waiting" id="ready-my-status-area">
-                <span class="ready-card-waiting-text">待っています</span>
-                <p class="ready-card-status-text" id="ready-my-status">準備OK</p>
-                <button type="button" id="ready-button" class="primary-button ready-card-ready-btn">準備OK</button>
-              </div>
-              <button type="button" id="ready-cancel-button" class="secondary-button ready-card-cancel-btn">マッチングをやめる</button>
-            </div>
-            <div class="ready-card ready-card-opponent">
-              <p class="ready-card-label">相手</p>
-              <p class="ready-card-name" id="ready-opponent-name">？？？</p>
-              <p class="ready-card-status-text" id="ready-opponent-status">準備中</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- バトル進行エリア（両者OK後に表示） -->
-        <section class="panel panel-secondary" id="battle-view">
-          <div class="panel-header compact">
-            <h2>対戦中</h2>
-          </div>
-
-          <div class="battle-meta">
-            <div class="timer">
-              制限時間
-              <span id="timer-display">05:00</span>
-            </div>
-            <div class="versus" id="versus-display">
-              あなた vs ？？？
-            </div>
-          </div>
-
-          <div class="poem-input-area">
-            <div class="poem-input-row">
-              <div class="poem-input-left">
-                <label for="poem-input">あなたの五言絶句（漢字のみ・4行×各5字）</label>
-                <textarea
-                  id="poem-input"
-                  rows="5"
-                  placeholder="五言絶句を入力"
-                ></textarea>
-                <button id="poem-send-button" class="primary-button full">
-                  作品を送信する
-                </button>
-                <p class="helper-text" id="battle-helper-text">
-                  5分以内に送信してください。送信後は内容を編集できません。（漢字のみ・4行×各5字）
-                </p>
-              </div>
-              <div class="poem-input-right">
-                <p class="stroke-grid-label">画数（縦5×横4）</p>
-                <div class="stroke-grid" id="stroke-grid" aria-label="入力中の各文字の画数">
-                  <!-- 縦5行×横4列＝20マス。入力フォームの1字目〜20字目に対応。JSで更新 -->
-                  <div class="stroke-grid-cell" data-index="0"></div>
-                  <div class="stroke-grid-cell" data-index="1"></div>
-                  <div class="stroke-grid-cell" data-index="2"></div>
-                  <div class="stroke-grid-cell" data-index="3"></div>
-                  <div class="stroke-grid-cell" data-index="4"></div>
-                  <div class="stroke-grid-cell" data-index="5"></div>
-                  <div class="stroke-grid-cell" data-index="6"></div>
-                  <div class="stroke-grid-cell" data-index="7"></div>
-                  <div class="stroke-grid-cell" data-index="8"></div>
-                  <div class="stroke-grid-cell" data-index="9"></div>
-                  <div class="stroke-grid-cell" data-index="10"></div>
-                  <div class="stroke-grid-cell" data-index="11"></div>
-                  <div class="stroke-grid-cell" data-index="12"></div>
-                  <div class="stroke-grid-cell" data-index="13"></div>
-                  <div class="stroke-grid-cell" data-index="14"></div>
-                  <div class="stroke-grid-cell" data-index="15"></div>
-                  <div class="stroke-grid-cell" data-index="16"></div>
-                  <div class="stroke-grid-cell" data-index="17"></div>
-                  <div class="stroke-grid-cell" data-index="18"></div>
-                  <div class="stroke-grid-cell" data-index="19"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 鑑賞画面 -->
-        <section class="panel panel-tertiary" id="result-view">
-          <div class="panel-header compact">
-            <h2>鑑賞タイム</h2>
-            <p>二人の五言絶句を味わおう。</p>
-          </div>
-
-          <div class="poem-compare">
-            <article class="poem-card me">
-              <h3>あなたの作品</h3>
-              <pre id="my-poem-display" class="poem-text">（まだ送信されていません）</pre>
-            </article>
-
-            <article class="poem-card other">
-              <h3>相手の作品</h3>
-              <pre id="opponent-poem-display" class="poem-text">（相手の送信を待っています）</pre>
-            </article>
-          </div>
-
-          <div class="result-actions">
-            <button id="back-to-home-button" class="secondary-button">
-              ホームに戻る
-            </button>
+            <button id="charge-back-button" type="button" class="secondary-button">投稿へ戻る</button>
           </div>
         </section>
       </main>
@@ -308,7 +185,7 @@
       <footer class="app-footer">
         <span>五言絶句バトル</span>
         <span class="dot">·</span>
-        <span>オンライン対詩プラットフォーム</span>
+        <span>五言絶句SNS / 漢字マーケット</span>
       </footer>
     </div>
 
