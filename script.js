@@ -91,6 +91,24 @@ const applyPostUsage = httpsCallable(functions, "applyPostUsage");
 const tradeKanji = httpsCallable(functions, "tradeKanji");
 const recordPostView = httpsCallable(functions, "recordPostView");
 
+function getCallableErrorMessage(e, fallback) {
+  const code = e?.code || "";
+  const message = e?.message || "";
+  if (code.includes("functions/not-found")) {
+    return "Cloud Functions が未デプロイです。`firebase deploy --only functions` を実行してください。";
+  }
+  if (code.includes("unauthenticated")) {
+    return "ログインが必要です。";
+  }
+  if (code.includes("permission-denied")) {
+    return "権限エラーです。Firestore ルールを確認してください。";
+  }
+  if (code.includes("unavailable")) {
+    return "サーバーに接続できません。時間をおいて再試行してください。";
+  }
+  return message || fallback;
+}
+
 function getStrokeAsset() {
   if (auth.currentUser && strokeAssetCache !== null) return strokeAssetCache;
   if (auth.currentUser) return DEFAULT_STROKE_ASSET;
@@ -270,6 +288,21 @@ function uniqueChars(poemText) {
   return [...new Set(poemText.replace(/[^\u4E00-\u9FFF]/g, "").split(""))];
 }
 
+function buildTimelineStrokeGridHTML(poemText) {
+  const chars = poemText.replace(/[^\u4E00-\u9FFF]/g, "").split("").slice(0, 20);
+  const values = new Array(20).fill("");
+  for (let i = 0; i < 20; i += 1) {
+    const char = chars[i];
+    if (!char) continue;
+    const cellIndex = (i % 5) * 4 + (3 - Math.floor(i / 5));
+    const count = STROKE_COUNT[char];
+    values[cellIndex] = count !== undefined ? String(count) : "?";
+  }
+  return values
+    .map((v) => `<div class="timeline-stroke-cell${v ? " filled" : ""}${v === "?" ? " unknown" : ""}">${v}</div>`)
+    .join("");
+}
+
 async function submitPost() {
   if (!auth.currentUser) {
     alert("投稿するにはログインしてください。");
@@ -305,14 +338,25 @@ async function submitPost() {
       createdAt: serverTimestamp()
     });
     setStrokeAsset(getStrokeAsset() - totalCost);
-    await applyPostUsage({ chars: text.replace(/[^\u4E00-\u9FFF]/g, "").split("") });
+    try {
+      await applyPostUsage({ chars: text.replace(/[^\u4E00-\u9FFF]/g, "").split("") });
+    } catch (usageErr) {
+      console.error("applyPostUsage failed", usageErr);
+      battleHelperText.textContent =
+        `投稿は完了しました。市場反映が遅れています。(${getCallableErrorMessage(
+          usageErr,
+          "後で自動反映されます"
+        )})`;
+    }
 
     poemInput.value = "";
     updateStrokeGrid();
-    battleHelperText.textContent = `投稿しました。コスト ${totalCost} 画数資産（固定 ${BASE_POST_FEE} + 作品 ${poemStrokes}）`;
+    if (!battleHelperText.textContent.includes("市場反映が遅れています")) {
+      battleHelperText.textContent = `投稿しました。コスト ${totalCost} 画数資産（固定 ${BASE_POST_FEE} + 作品 ${poemStrokes}）`;
+    }
   } catch (e) {
     console.error(e);
-    alert("投稿に失敗しました。");
+    alert(getCallableErrorMessage(e, "投稿に失敗しました。"));
   } finally {
     poemSendButton.disabled = false;
   }
@@ -343,12 +387,16 @@ function renderTimeline() {
     card.className = "timeline-card";
     card.dataset.postId = post.id;
     card.dataset.chars = uniqueChars(post.text || "").join("");
+    const strokeGridHtml = buildTimelineStrokeGridHTML(post.text || "");
     card.innerHTML = `
       <div class="timeline-meta">
         <span>${post.authorName || "不明ユーザー"}</span>
         <span>${post.createdAtLabel || ""}</span>
       </div>
-      <pre class="poem-text">${post.text || ""}</pre>
+      <div class="timeline-poem-row">
+        <pre class="poem-text timeline-poem-text">${post.text || ""}</pre>
+        <div class="timeline-stroke-grid">${strokeGridHtml}</div>
+      </div>
       <div class="timeline-footer">合計画数: ${post.poemStrokeTotal || 0}</div>
     `;
     fragment.appendChild(card);
@@ -523,7 +571,7 @@ async function handleTrade(action, char) {
     renderMarket();
   } catch (e) {
     console.error(e);
-    alert(e?.message || "取引に失敗しました。");
+    alert(getCallableErrorMessage(e, "取引に失敗しました。"));
   }
 }
 
