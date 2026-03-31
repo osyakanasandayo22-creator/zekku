@@ -303,6 +303,22 @@ function buildTimelineStrokeGridHTML(poemText) {
     .join("");
 }
 
+function escapeHtml(raw) {
+  return raw
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function buildTimelinePoemHTML(poemText) {
+  const lines = poemText.split(/\r?\n/).map((line) => escapeHtml(line));
+  return lines
+    .map((line) => `<span class="poem-line">${line}</span>`)
+    .join("<br>");
+}
+
 async function submitPost() {
   if (!auth.currentUser) {
     alert("投稿するにはログインしてください。");
@@ -388,13 +404,14 @@ function renderTimeline() {
     card.dataset.postId = post.id;
     card.dataset.chars = uniqueChars(post.text || "").join("");
     const strokeGridHtml = buildTimelineStrokeGridHTML(post.text || "");
+    const poemHtml = buildTimelinePoemHTML(post.text || "");
     card.innerHTML = `
       <div class="timeline-meta">
         <span>${post.authorName || "不明ユーザー"}</span>
         <span>${post.createdAtLabel || ""}</span>
       </div>
       <div class="timeline-poem-row">
-        <pre class="poem-text timeline-poem-text">${post.text || ""}</pre>
+        <pre class="poem-text timeline-poem-text">${poemHtml}</pre>
         <div class="timeline-stroke-grid">${strokeGridHtml}</div>
       </div>
       <div class="timeline-footer">合計画数: ${post.poemStrokeTotal || 0}</div>
